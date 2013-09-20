@@ -1,9 +1,15 @@
 var express = require('express');
 var routes = require('./routes');
 var user = require('./routes/user');
+var wk_leaderboard = require('./routes/week_leaderboard.js');
 var http = require('http');
 var path = require('path');
-var Sequelize = require("sequelize");
+
+/* sql testing... */
+//var sqltest = require('./routes/sql_test.js');
+//var test = new sqltest.SQLTest();
+//console.log(test.testsql());
+/* ============================== */
 
 var app = express();
 app.use(express.logger());
@@ -24,7 +30,7 @@ if ('development' == app.get('env')) {
 
 
 //var sequelize = new Sequelize('postgres://ubuntu@localhost:5432/mydb'
-var sequelize = new Sequelize('pooldb','postgres', 'football', {
+/*var sequelize = new Sequelize('pooldb','postgres', 'football', {
 	host: '127.0.0.1',
 	port: 5432,
 	dialect: 'postgres'
@@ -35,17 +41,22 @@ sequelize.query("SELECT * FROM weeks").success(function(myTableRows) {
 });
 
 app.get('/routes', routes.index);
-app.get('/users', user.list);
+app.get('/users', user.list);*/
 
 app.get('/', function(request, response) {
   response.send('Overall Leaderboard');
 });
 
 app.param('wknum');
+app.param('year');
 
+/*
 app.get('/week/:wknum', function(request, response) {
   response.send('Week ' + request.params.wknum + ' Leaderboard');
-});
+});*/
+
+app.get('/:year/week/:wknum/leaderboard', wk_leaderboard.leaderboard);
+
 
 /*
 app.get('/week/leaderboard', function(request, response) {
