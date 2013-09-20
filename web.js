@@ -2,6 +2,7 @@ var express = require('express');
 var routes = require('./routes');
 var user = require('./routes/user');
 var wk_leaderboard = require('./routes/week_leaderboard.js');
+var update_games = require('./routes/update_games.js');
 var http = require('http');
 var path = require('path');
 
@@ -52,12 +53,13 @@ app.get('/', function(request, response) {
 app.param('wknum');
 app.param('year');
 
-/*
-app.get('/week/:wknum', function(request, response) {
-  response.send('Week ' + request.params.wknum + ' Leaderboard');
-});*/
+var load_model = function(req,res,next) {
+   res.locals.models = app.get('models');
+   next();
+};
 
 app.get('/:year/week/:wknum/leaderboard', wk_leaderboard.leaderboard);
+app.get('/:year/week/:wknum/update_games', load_model, update_games.update);
 
 
 /*
