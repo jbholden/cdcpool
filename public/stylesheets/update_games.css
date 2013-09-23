@@ -1,0 +1,81 @@
+/* css help?  http://kyleschaeffer.com/development/css-font-size-em-vs-px-vs-pt-vs/ */
+
+.page-title {
+   color: white;
+   background-color: #0000E6;
+   /*background: -webkit-linear-gradient(top,#2F2727,#1a82f7);*/
+   width: 100%;
+   padding: 1px 4px;
+   font-size: 16pt;
+   font-family: Helvetica;
+   font-weight: 100;
+   text-align: center;
+}
+
+.page-subtitle {
+   color: black;
+   background-color: lightyellow;
+   width: 100%;
+   padding: 4px;
+   font-size: 12pt;
+   font-family: Helvetica;
+   font-weight: 100;
+   text-align: center;
+}
+
+.page-div {
+   width: 100%;
+   padding: 1px;
+   background-color: #0000E6;
+}
+
+.game-header {
+   color: #E6E6FF;
+   background-color: #0000E6;
+   font-size: 8pt;
+   padding: 0px 4px;
+}
+
+.game-content {
+   color: black;
+   background-color: lightyellow;
+}
+
+#teams-header {
+   text-align: left;
+   padding: 1px 4px;
+}
+
+#score-header {
+   text-align: center;
+   padding: 1px 4px;
+}
+
+#status-header {
+   background-color: white;
+}
+
+#team-name {
+   width: 15em;
+   /*width: 200px;*/
+   font-family: courier;
+   font-size: 10pt;
+   padding: 1px 4px;
+   /*padding: .5em 1em;*/
+   white-space: nowrap;
+}
+
+#vs {
+   background-color: white;
+   font-size: small;
+}
+
+#game-status {
+   background-color: white;
+   font-size: small;
+}
+
+#team-score {
+   background-color: white;
+   text-align: center;
+}

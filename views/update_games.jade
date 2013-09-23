@@ -1,0 +1,48 @@
+// TODO:  move input names to mixin function?
+
+mixin final_checkbox(entry)
+   if entry.state == "final"
+      input(type='checkbox', name='#{entry.final_checkbox_name}', checked="checked", value="checked")
+      | Final
+   else
+      input(type='checkbox', name='#{entry.final_checkbox_name}', value="checked")
+      | Final
+
+doctype 5
+html(lang="en")
+   head
+      title CDC Pool Week #{week} Games
+      link(rel="stylesheet" type="text/css" href="/stylesheets/update_games.css")
+   body
+      form(action="games",method="post")
+         div(class="page-title") CDC Football Pool #{year}
+         div(class="page-subtitle") Week #{week} Games
+         div(class="page-div")
+         br
+         each entry in data
+            table
+               thead(class="game-header")
+                  td
+                  td(id="teams-header") Teams
+                  td(id="score-header") Score
+                  td(id="status-header")
+               tr(class="game-content")
+                  td(id="vs")
+                  td(id="team-name") #{entry.away_team}
+                  td(id="team-score") 
+                     input(type='text',name='#{entry.away_score_input_name}',size='2',value='#{entry.away_score}')
+                  td(id="game-status")
+               tr(class="game-content")
+                  td(id="vs") vs.
+                  td(id="team-name") #{entry.home_team}
+                  td(id="team-score") 
+                     input(type='text',name='#{entry.home_score_input_name}',size='2',value='#{entry.home_score}')
+                  td(id="game-status")
+                     +final_checkbox(entry)
+            br
+         table
+            tr
+               td
+                  input(type='submit', name='submit_form', value='Submit')
+               td
+                  input(type='submit', name='cancel_form', value='Cancel')
