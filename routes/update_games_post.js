@@ -59,10 +59,6 @@ exports.post = function(req, res){
       }
    };
 
-   //console.log('update_games.post');
-   //console.log(res.locals.models);
-   //console.log(req.body);
-
    var data = new Array();
    
    for (var property in req.body) {

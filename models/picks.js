@@ -20,6 +20,7 @@ module.exports = function(sequelize, DataTypes) {
       away_score: DataTypes.INTEGER,
       home_score: DataTypes.INTEGER
   }, {
+    timestamps: false,
     instanceMethods: {
       countTasks: function() {
         // how to implement this method ?

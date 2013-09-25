@@ -14,6 +14,7 @@ module.exports = function(sequelize, DataTypes) {
       number: DataTypes.INTEGER,
       games: DataTypes.ARRAY(DataTypes.INTEGER)
   }, {
+    timestamps: false,
     instanceMethods: {
       countTasks: function() {
         // how to implement this method ?

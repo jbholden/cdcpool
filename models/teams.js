@@ -12,6 +12,7 @@ module.exports = function(sequelize, DataTypes) {
       pool_name: DataTypes.TEXT,    
       conference: DataTypes.TEXT
   }, {
+    timestamps: false,
     instanceMethods: {
       countTasks: function() {
         // how to implement this method ?

@@ -3,6 +3,8 @@ var routes = require('./routes');
 var user = require('./routes/user');
 var wk_leaderboard = require('./routes/week_leaderboard.js');
 var update_games = require('./routes/update_games.js');
+var update_games_post = require('./routes/update_games_post.js');
+var player_results = require('./routes/player_results.js');
 var http = require('http');
 var path = require('path');
 
@@ -31,18 +33,7 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-
-//var sequelize = new Sequelize('postgres://ubuntu@localhost:5432/mydb'
-/*var sequelize = new Sequelize('pooldb','postgres', 'football', {
-	host: '127.0.0.1',
-	port: 5432,
-	dialect: 'postgres'
-});
-
-sequelize.query("SELECT * FROM weeks").success(function(myTableRows) {
-	console.log(myTableRows)
-});
-
+/*
 app.get('/routes', routes.index);
 app.get('/users', user.list);*/
 
@@ -52,6 +43,7 @@ app.get('/', function(request, response) {
 
 app.param('wknum');
 app.param('year');
+app.param('playernum');
 
 var load_model = function(req,res,next) {
    res.locals.models = app.get('models');
@@ -59,7 +51,9 @@ var load_model = function(req,res,next) {
 };
 
 app.get('/:year/week/:wknum/leaderboard', wk_leaderboard.leaderboard);
-app.get('/:year/week/:wknum/update_games', load_model, update_games.update);
+app.get('/:year/week/:wknum/games', load_model, update_games.get);
+app.post('/:year/week/:wknum/games', load_model, update_games_post.post);
+app.get('/:year/week/:wknum/player/:playernum/results', load_model, player_results.get);
 
 
 /*

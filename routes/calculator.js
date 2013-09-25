@@ -33,6 +33,8 @@
    (done) this.at_least_one_game_in_progress
    (done) this.get_summary_state_of_all_games
    (done) this.get_game_result_string
+   (done) this.get_favored_team_name
+   (done) this.get_game_score_spread
 */
 
 function Calculator(games,picks,teams) {
@@ -211,6 +213,19 @@ function Calculator(games,picks,teams) {
       return game.state;
    }
 
+   /*
+   this.get_game_state_string = function(game_id) {
+      game = this.get_game(game_id);
+      if (game.state == "final") {
+         return "final";
+      } else if (game.state == "in_progress") {
+         return "in progress";
+      } else if (game.state == "not_started") {
+         return "";
+      }
+      return null;
+   }*/
+
    this.did_player_win_game = function(game_id) {
       game = this.get_game(game_id);
       winner = this.get_pool_game_winner(game_id);
@@ -369,6 +384,25 @@ function Calculator(games,picks,teams) {
          return "behind";
       }
       return "";
+   }
+
+   this.get_favored_team_name = function(game_id) {
+      game = this.get_game(game_id);
+      if (game.favored == "home") {
+         return this.get_team_name(game.home_team);
+      } else if (game.favored == "away") {
+         return this.get_team_name(game.away_team);
+      }
+      return null;
+   }
+
+   this.get_game_score_spread = function(game_id) {
+      game = this.get_game(game_id);
+      if (game.home_score > game.away_score) {
+         return game.home_score - game.away_score;
+      } else {
+         return game.away_score - game.home_score;
+      }
    }
 }
 

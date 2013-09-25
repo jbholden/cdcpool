@@ -5,6 +5,11 @@ function PageData() {
    this.home_team = null;
    this.away_score = null;
    this.home_score = null;
+   this.game_state = null;
+   this.favored = null;
+   this.favored_spread = null;
+   this.winning_team = null;
+   this.game_spread = null;
 }
 
 exports.get = function(req, res){
@@ -41,11 +46,6 @@ exports.get = function(req, res){
          }
          teams_model.findAll({where: ['id=ANY(?)',team_ids]}).complete(next);
       }]}, function(err,results) {
-         console.log("database fetch complete");
-         //console.log(results.week.length+" weeks.");
-         //console.log(results.picks.length+" picks.");
-         //console.log(results.games.length+" games.");
-         //console.log(results.teams.length+" teams.");
          var player_name = results.player.name;
          var Calculator = require('./calculator.js');
          var calc = new Calculator(results.games,results.picks,results.teams);
@@ -59,6 +59,16 @@ exports.get = function(req, res){
             page_data.home_team = calc.get_game_home_team(game_id);
             page_data.away_score = results.games[i].away_score;
             page_data.home_score = results.games[i].home_score;
+            page_data.game_state = calc.get_game_state(game_id);
+            page_data.favored = calc.get_favored_team_name(game_id);
+            page_data.favored_spread = results.games[i].spread;
+            if (results.games[i].state == "final") {
+               page_data.winning_team = calc.get_pool_game_winner_team_name(game_id);
+               page_data.game_spread = calc.get_game_score_spread(game_id);
+            } else if (results.games[i].state == "in_progress") {
+               page_data.winning_team = calc.get_team_name_winning_pool_game(game_id);
+               page_data.game_spread = calc.get_game_score_spread(game_id);
+            }
             data.push(page_data);
          }
          res.render('player_results', { year: req.params.year, week:req.params.wknum, player:player_name,data:data });

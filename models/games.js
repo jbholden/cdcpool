@@ -26,6 +26,7 @@ module.exports = function(sequelize, DataTypes) {
       quarter: DataTypes.TEXT,    
       time_left: DataTypes.TEXT
   }, {
+    timestamps: false,
     instanceMethods: {
       countTasks: function() {
         // how to implement this method ?

@@ -1,16 +1,60 @@
-// TODO:  move input names to mixin function?
-
 mixin game_result(entry)
     if entry.result == "win"
-        td(id="win-result-content") #{entry.result}
+        td(class="result-row")
+            div(id="win-result-content") #{entry.result}
     else if entry.result == "loss"
-        td(id="loss-result-content") #{entry.result}
+        td(class="result-row")
+            div(id="loss-result-content") #{entry.result}
     else if entry.result == "ahead"
-        td(id="ahead-result-content") #{entry.result}
+        td(class="result-row")
+            div(id="ahead-result-content") #{entry.result}
     else if entry.result == "behind"
-        td(id="behind-result-content") #{entry.result}
+        td(class="result-row")
+            div(id="behind-result-content") #{entry.result}
     else 
-        td(id="result-content") #{entry.result}
+        td(class="result-row")
+            div(id="result-content") #{entry.result}
+
+mixin game_state(entry)
+    if entry.game_state == "final"
+        td(id="game-final") final
+    else if entry.game_state == "in_progress"
+        td(id="game-in-progress") in progress
+    else
+        td
+
+mixin display_game(entry)
+    td(class="result-row")
+        table
+            tr
+                td(id="team-content") #{entry.away_team}
+                td(id="score-content") #{entry.away_score}
+                td
+            tr
+                td(id="team-content") #{entry.home_team}
+                td(id="score-content") #{entry.home_score}
+                +game_state(entry)
+
+mixin display_spread(entry)
+    td(class="result-row")
+        table
+            tr
+                td(id="spread-label") Favored
+                td(id="spread-team") #{entry.favored}
+                td(id="spread-value") #{entry.favored_spread}
+            tr
+                if entry.game_state == "final"
+                    td(id="spread-label") Result
+                    td(id="spread-team") #{entry.winning_team}
+                    td(id="spread-value") #{entry.game_spread}.0
+                else if entry.game_state == "in_progress"
+                    td(id="spread-label") Ahead
+                    td(id="spread-team") #{entry.winning_team}
+                    td(id="spread-value") #{entry.game_spread}.0
+                else
+                    td
+                    td
+                    td
 
 doctype 5
 html(lang="en")
@@ -27,15 +71,11 @@ html(lang="en")
         thead(class="results-header")
             td(id="pick-header") Player Pick
             td(id="result-header") Result
-            td(id="team-header") Away
-            td(id="score-header") Score
-            td(id="team-header") Home
-            td(id="score-header") Score
+            td(id="game-header") Game
+            td(id="spread-header") Spread 
         each entry in data
             tr
-               td(id="pick-content") #{entry.player_pick}
+               td(class="result-row",id="pick-content") #{entry.player_pick}
                +game_result(entry)
-               td(id="team-content") #{entry.away_team}
-               td(id="score-content") #{entry.away_score}
-               td(id="team-content") #{entry.home_team}
-               td(id="score-content") #{entry.home_score}
+               +display_game(entry)
+               +display_spread(entry)
