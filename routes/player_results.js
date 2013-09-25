@@ -12,6 +12,14 @@ function PageData() {
    this.game_spread = null;
 }
 
+function PageSummaryData() {
+   this.wins = null;
+   this.losses = null;
+   this.win_pct = null;
+   this.possible_wins = null;
+   this.projected_wins = null;
+}
+
 exports.get = function(req, res){
    models = res.locals.models;
    var picks_model = models.picks;
@@ -63,14 +71,23 @@ exports.get = function(req, res){
             page_data.favored = calc.get_favored_team_name(game_id);
             page_data.favored_spread = results.games[i].spread;
             if (results.games[i].state == "final") {
-               page_data.winning_team = calc.get_pool_game_winner_team_name(game_id);
+               page_data.winning_team = calc.get_game_winner_team_name(game_id);
+               //page_data.winning_team = calc.get_pool_game_winner_team_name(game_id);
                page_data.game_spread = calc.get_game_score_spread(game_id);
             } else if (results.games[i].state == "in_progress") {
-               page_data.winning_team = calc.get_team_name_winning_pool_game(game_id);
+               page_data.winning_team = calc.get_team_name_winning_game(game_id);
+               //page_data.winning_team = calc.get_team_name_winning_pool_game(game_id);
                page_data.game_spread = calc.get_game_score_spread(game_id);
             }
             data.push(page_data);
          }
-         res.render('player_results', { year: req.params.year, week:req.params.wknum, player:player_name,data:data });
+         var summary_data = new PageSummaryData();
+         summary_data.wins = calc.get_number_of_wins();
+         summary_data.losses = calc.get_number_of_losses();
+         summary_data.win_pct = calc.get_win_pct_string(summary_data.wins,summary_data.losses);
+         summary_data.possible_wins = calc.get_number_of_possible_wins();
+         summary_data.projected_wins = calc.get_number_of_projected_wins();
+
+         res.render('player_results', { year: req.params.year, week:req.params.wknum, player:player_name,data:data,summary:summary_data });
    });
 }; 

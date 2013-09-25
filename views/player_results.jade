@@ -44,7 +44,7 @@ mixin display_spread(entry)
                 td(id="spread-value") #{entry.favored_spread}
             tr
                 if entry.game_state == "final"
-                    td(id="spread-label") Result
+                    td(id="spread-label") Winner
                     td(id="spread-team") #{entry.winning_team}
                     td(id="spread-value") #{entry.game_spread}.0
                 else if entry.game_state == "in_progress"
@@ -55,6 +55,25 @@ mixin display_spread(entry)
                     td
                     td
                     td
+
+mixin display_summary(summary)
+    table
+        tr
+            td(id="table-line",colspan="10")
+        tr(class="summary-content")
+            td(id="summary-label") Wins
+            td(id="summary-value") #{summary.wins}
+            td(id="summary-label") Losses
+            td(id="summary-value") #{summary.losses}
+            td(id="summary-label") Win Pct
+            td(id="summary-value") #{summary.win_pct}
+            td(id="summary-label") Projected Wins
+            td(id="summary-value") #{summary.projected_wins}
+            td(id="summary-label") Possible Wins
+            td(id="summary-value") #{summary.possible_wins}
+        tr
+            td(id="table-line",colspan="10")
+    br
 
 doctype 5
 html(lang="en")
@@ -67,6 +86,8 @@ html(lang="en")
       div(class="page-subtitle") #{player}
       div(class="page-div")
       br
+      +display_summary(summary)
+      //+display_summary_vertically(summary)
       table
         thead(class="results-header")
             td(id="pick-header") Player Pick
@@ -79,3 +100,5 @@ html(lang="en")
                +game_result(entry)
                +display_game(entry)
                +display_spread(entry)
+            tr
+                td(id="table-line",colspan="4")

@@ -29,6 +29,11 @@
    background-color: #0000E6;
 }
 
+#table-line {
+   width: 100%;
+   border-bottom: 1px solid lightgray;
+}
+
 .results-header {
    color: #E6E6FF;
    background-color: #0000E6;
@@ -36,10 +41,6 @@
    padding: 0px 4px;
    font-family: Helvetica;
    font-weight: 100;
-}
-
-.result-row {
-    border-bottom: 1px solid lightgray;
 }
 
 #pick-header {
@@ -67,7 +68,27 @@
    padding: 1px 4px;
 }
 
+.summary-content {
+   font-size: 12pt;
+   padding: 0px 4px;
+   font-family: Helvetica;
+   font-weight: 300;
+   white-space: nowrap;
+}
 
+#summary-label {
+   color: blue;
+   background-color: white;
+   text-align: right;
+   padding: 1px 4px;
+}
+
+#summary-value {
+   color: gray;
+   background-color: white;
+   text-align: center;
+   padding: 1px 4px;
+}
 
 #pick-content {
    color: blue;
@@ -76,6 +97,7 @@
    font-family: Helvetica;
    font-weight: 300;
    font-size: 10pt;
+   white-space: nowrap;
 }
 
 #result-content {
@@ -85,6 +107,7 @@
    color: black;
    text-align: center;
    padding: 1px 4px;
+   white-space: nowrap;
 }
 
 #win-result-content {
@@ -136,6 +159,7 @@
    background-color: lightyellow;
    padding: 1px 4px;
    width: 15em;
+   white-space: nowrap;
 }
 
 #score-content {
@@ -157,6 +181,7 @@
    text-align: right;
    background-color: white;
    padding: 1px 4px;
+   white-space: nowrap;
 }
 
 #spread-team {
@@ -165,9 +190,10 @@
    font-size: 10pt;
    color: black;
    text-align: left;
-   background-color: white;
+   background-color: #EDEDED;
    padding: 1px 4px;
    width: 15em;
+   white-space: nowrap;
 }
 
 #spread-value {
@@ -175,8 +201,8 @@
    font-weight: 100;
    font-size: 10pt;
    color: black;
-   text-align: center;
-   background-color: white;
+   text-align: right;
+   background-color: #EDEDED;
    padding: 1px 4px;
    width: 2em;
 }
@@ -189,6 +215,7 @@
    font-weight: 100;
    font-size: 10pt;
    text-align: center;
+   white-space: nowrap;
 }
 
 #game-in-progress {
@@ -199,11 +226,13 @@
    font-weight: 100;
    font-size: 10pt;
    text-align: center;
+   white-space: nowrap;
 }
 
 #game-status {
    background-color: white;
    font-size: small;
+   white-space: nowrap;
 }
 
 #team-score {

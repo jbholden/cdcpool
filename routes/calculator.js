@@ -134,7 +134,7 @@ function Calculator(games,picks,teams) {
    this.get_game_winner = function(game_id) {
       game = this.get_game(game_id);
       if (game != null && game.state == "final") {
-         if (this.game[i].home_score > this.game[i].away_score) {
+         if (game.home_score > game.away_score) {
             return "home";
          } else {
             return "away";
@@ -189,7 +189,7 @@ function Calculator(games,picks,teams) {
    this.get_team_winning_game = function(game_id) {
       game = this.get_game(game_id);
       if (game != null && game.state == "in_progress") {
-         if (this.game[i].home_score > this.game[i].away_score) {
+         if (game.home_score > game.away_score) {
             return "home";
          } else {
             return "away";
@@ -403,6 +403,19 @@ function Calculator(games,picks,teams) {
       } else {
          return game.away_score - game.home_score;
       }
+   }
+
+   this.get_win_pct = function(wins,losses) {
+      var num_games = wins+losses;
+      if (num_games == 0) {
+         return 0.000;
+      }
+      return wins / num_games;
+   }
+
+   this.get_win_pct_string = function(wins,losses) {
+      win_pct = this.get_win_pct(wins,losses);
+      return "" + win_pct.toFixed(3);
    }
 }
 
