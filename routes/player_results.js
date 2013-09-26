@@ -18,6 +18,7 @@ function PageSummaryData() {
    this.win_pct = null;
    this.possible_wins = null;
    this.projected_wins = null;
+   this.week_state = null;
 }
 
 exports.get = function(req, res){
@@ -87,6 +88,7 @@ exports.get = function(req, res){
          summary_data.win_pct = calc.get_win_pct_string(summary_data.wins,summary_data.losses);
          summary_data.possible_wins = calc.get_number_of_possible_wins();
          summary_data.projected_wins = calc.get_number_of_projected_wins();
+         summary_data.week_state = calc.get_summary_state_of_all_games();
 
          res.render('player_results', { year: req.params.year, week:req.params.wknum, player:player_name,data:data,summary:summary_data });
    });

@@ -5,6 +5,7 @@ var wk_leaderboard = require('./routes/week_leaderboard.js');
 var update_games = require('./routes/update_games.js');
 var update_games_post = require('./routes/update_games_post.js');
 var player_results = require('./routes/player_results.js');
+var week_results = require('./routes/week_results.js');
 var http = require('http');
 var path = require('path');
 
@@ -51,6 +52,7 @@ var load_model = function(req,res,next) {
 };
 
 app.get('/:year/week/:wknum/leaderboard', wk_leaderboard.leaderboard);
+app.get('/:year/week/:wknum/results', load_model, week_results.get);
 app.get('/:year/week/:wknum/games', load_model, update_games.get);
 app.post('/:year/week/:wknum/games', load_model, update_games_post.post);
 app.get('/:year/week/:wknum/player/:playernum/results', load_model, player_results.get);

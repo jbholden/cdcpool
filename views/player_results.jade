@@ -57,22 +57,38 @@ mixin display_spread(entry)
                     td
 
 mixin display_summary(summary)
-    table
-        tr
-            td(id="table-line",colspan="10")
-        tr(class="summary-content")
-            td(id="summary-label") Wins
-            td(id="summary-value") #{summary.wins}
-            td(id="summary-label") Losses
-            td(id="summary-value") #{summary.losses}
-            td(id="summary-label") Win Pct
-            td(id="summary-value") #{summary.win_pct}
-            td(id="summary-label") Projected Wins
-            td(id="summary-value") #{summary.projected_wins}
-            td(id="summary-label") Possible Wins
-            td(id="summary-value") #{summary.possible_wins}
-        tr
-            td(id="table-line",colspan="10")
+    div
+        #{summary.week_state}
+    if summary.week_state == "final"
+        table
+            tr
+                td(id="table-line",colspan="6")
+            tr(class="summary-content")
+                td(id="summary-label") Wins
+                td(id="summary-value") #{summary.wins}
+                td(id="summary-label") Losses
+                td(id="summary-value") #{summary.losses}
+                td(id="summary-label") Win Pct
+                td(id="summary-value") #{summary.win_pct}
+            tr
+                td(id="table-line",colspan="6")
+    else
+        table
+            tr
+                td(id="table-line",colspan="10")
+            tr(class="summary-content")
+                td(id="summary-label") Wins
+                td(id="summary-value") #{summary.wins}
+                td(id="summary-label") Losses
+                td(id="summary-value") #{summary.losses}
+                td(id="summary-label") Win Pct
+                td(id="summary-value") #{summary.win_pct}
+                td(id="summary-label") Projected Wins
+                td(id="summary-value") #{summary.projected_wins}
+                td(id="summary-label") Possible Wins
+                td(id="summary-value") #{summary.possible_wins}
+            tr
+                td(id="table-line",colspan="10")
     br
 
 doctype 5

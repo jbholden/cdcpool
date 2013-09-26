@@ -1,0 +1,92 @@
+.page-title {
+   color: white;
+   background-color: #0000E6;
+   /*background: -webkit-linear-gradient(top,#2F2727,#1a82f7);*/
+   width: 100%;
+   padding: 1px 4px;
+   font-size: 16pt;
+   font-family: Helvetica;
+   font-weight: 100;
+   text-align: center;
+}
+
+.page-subtitle {
+   color: black;
+   background-color: lightyellow;
+   width: 100%;
+   padding: 4px;
+   font-size: 12pt;
+   font-family: Helvetica;
+   font-weight: 100;
+   text-align: center;
+}
+
+.page-div {
+   width: 100%;
+   padding: 1px;
+   background-color: #0000E6;
+}
+
+.results-header {
+   color: #E6E6FF;
+   background-color: #0000E6;
+   font-size: 8pt;
+   padding: 0px 4px;
+   font-family: Helvetica;
+   font-weight: 100;
+}
+
+#header {
+   text-align: center;
+   padding: 1px 4px;
+}
+
+#link-header {
+   text-align: center;
+   padding: 1px 4px;
+   color: #E6E6FF;
+   background-color: #0000E6;
+   font-size: 8pt;
+   padding: 0px 4px;
+   font-family: Helvetica;
+   font-weight: 100;
+}
+
+#content {
+   color: black;
+   background-color: white;
+   font-size: 10pt;
+   padding: 0px 4px;
+   font-family: Helvetica;
+   font-weight: 100;
+   white-space: nowrap;
+   text-align: center;
+}
+
+#player-content {
+   color: black;
+   background-color: lightyellow;
+   font-size: 10pt;
+   padding: 0px 4px;
+   font-family: Helvetica;
+   font-weight: 100;
+   white-space: nowrap;
+   text-align: left;
+   width : 15em;
+}
+
+#highlight-content {
+   color: black;
+   background-color: lightgray;
+   font-size: 10pt;
+   padding: 0px 4px;
+   font-family: Helvetica;
+   font-weight: 100;
+   white-space: nowrap;
+   text-align: center;
+}
+
+#table-line {
+   width: 100%;
+   border-bottom: 1px solid lightgray;
+}

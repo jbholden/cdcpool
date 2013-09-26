@@ -337,7 +337,7 @@ function Calculator(games,picks,teams) {
            final_games++;
         }
       }
-      return final_games = this.games.length;
+      return final_games == this.games.length;
    }
 
    this.no_games_started = function() {
@@ -347,7 +347,7 @@ function Calculator(games,picks,teams) {
            not_started++;
         }
       }
-      return not_started = this.games.length;
+      return not_started == this.games.length;
    }
 
    this.at_least_one_game_in_progress = function() {
