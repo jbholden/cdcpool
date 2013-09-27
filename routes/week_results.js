@@ -8,45 +8,30 @@ function PageData() {
    this.possible_wins = null;
 }
 
-function sort_by_player_ascending(a,b) {
-   if (a.player_name==b.player_name) { return 0; }
-   return a.player_name < b.player_name? -1 : 1;
+function assign_rank_by_wins(property,data) {
+   var wins = data[0][property];
+   var rank = 1;
+   for (var i=0; i < data.length; i++) {
+      wins_changed = data[i][property] != wins;
+      if (wins_changed) {
+         rank = i+1;
+         wins = data[i][property];
+      }
+      data[i].rank = rank;
+   }
 }
-function sort_by_player_descending(a,b) {
-   if (a.player_name==b.player_name) { return 0; }
-   return a.player_name < b.player_name? 1 : -1;
-}
-function sort_by_wins(a,b) {
-   if (a.wins==b.wins) { return 0; }
-   return a.wins < b.wins? 1 : -1;
-}
-function sort_by_wins_reverse(a,b) {
-   if (a.wins==b.wins) { return 0; }
-   return a.wins < b.wins? -1 : 1;
-}
-function sort_by_losses(a,b) {
-   if (a.losses==b.losses) { return 0; }
-   return a.losses < b.losses? 1 : -1;
-}
-function sort_by_losses_reverse(a,b) {
-   if (a.losses==b.losses) { return 0; }
-   return a.losses < b.losses? -1 : 1;
-}
-function sort_by_projected_wins(a,b) {
-   if (a.projected_wins==b.projected_wins) { return 0; }
-   return a.projected_wins < b.projected_wins? 1 : -1;
-}
-function sort_by_projected_wins_reverse(a,b) {
-   if (a.projected_wins==b.projected_wins) { return 0; }
-   return a.projected_wins < b.projected_wins? -1 : 1;
-}
-function sort_by_possible_wins(a,b) {
-   if (a.possible_wins==b.possible_wins) { return 0; }
-   return a.possible_wins < b.possible_wins? 1 : -1;
-}
-function sort_by_possible_wins_reverse(a,b) {
-   if (a.possible_wins==b.possible_wins) { return 0; }
-   return a.possible_wins < b.possible_wins? -1 : 1;
+
+function assign_rank(sorter,sort_by,data) {
+   if (sort_by.indexOf('projected') == 0) {
+      sorter.sort_week_results("projected",data);
+      assign_rank_by_wins("projected_wins",data);
+   } else if (sort_by.indexOf('possible') == 0) {
+      sorter.sort_week_results("possible",data);
+      assign_rank_by_wins("possible_wins",data);
+   } else {
+      sorter.sort_week_results("wins",data);
+      assign_rank_by_wins("wins",data);
+   }
 }
 
 
@@ -83,6 +68,7 @@ exports.get = function(req, res){
          }
          teams_model.findAll({where: ['id=ANY(?)',team_ids]}).complete(next);
       }]}, function(err,results) {
+
          var Calculator = require('./calculator.js');
 
          var get_player_picks = function(player_id,all_picks) {
@@ -93,6 +79,33 @@ exports.get = function(req, res){
                }
             }
             return player_picks;
+         }
+
+         var get_sort_by_param = function(week_state) {
+            if (req.query.hasOwnProperty('sort_by') == false)  {
+               return "wins";
+            } else if (req.query.sort_by == "player") {
+               return req.query.sort_by;
+            } else if (req.query.sort_by == "player_reversed") {
+               return req.query.sort_by;
+            } else if (req.query.sort_by == "wins") {
+               return req.query.sort_by;
+            } else if (req.query.sort_by == "wins_reversed") {
+               return req.query.sort_by;
+            } else if (req.query.sort_by == "losses") {
+               return req.query.sort_by;
+            } else if (req.query.sort_by == "losses_reversed") {
+               return req.query.sort_by;
+            } else if (week_state != "final" && req.query.sort_by == "projected") {
+               return req.query.sort_by;
+            } else if (week_state != "final" && req.query.sort_by == "projected_reversed") {
+               return req.query.sort_by;
+            } else if (week_state != "final" && req.query.sort_by == "possible") {
+               return req.query.sort_by;
+            } else if (week_state != "final" && req.query.sort_by == "possible_reversed") {
+               return req.query.sort_by;
+            }
+            return "wins";
          }
          
          var data = new Array();
@@ -116,34 +129,12 @@ exports.get = function(req, res){
             data.push(page_data);
          }
 
-         var sort_by = req.query.sort_by;
-         if (req.query.hasOwnProperty('sort_by') == false)  {
-            data.sort(sort_by_wins);
-            sort_by = "wins";
-         } else if (req.query.sort_by == "player") {
-            data.sort(sort_by_player_ascending);
-         } else if (req.query.sort_by == "player_reversed") {
-            data.sort(sort_by_player_descending);
-         } else if (req.query.sort_by == "wins") {
-            data.sort(sort_by_wins);
-         } else if (req.query.sort_by == "wins_reversed") {
-            data.sort(sort_by_wins_reverse);
-         } else if (req.query.sort_by == "losses") {
-            data.sort(sort_by_losses);
-         } else if (req.query.sort_by == "losses_reversed") {
-            data.sort(sort_by_losses_reverse);
-         } else if (week_state != "final" && req.query.sort_by == "projected") {
-            data.sort(sort_by_projected_wins);
-         } else if (week_state != "final" && req.query.sort_by == "projected_reversed") {
-            data.sort(sort_by_projected_wins_reverse);
-         } else if (week_state != "final" && req.query.sort_by == "possible") {
-            data.sort(sort_by_possible_wins);
-         } else if (week_state != "final" && req.query.sort_by == "possible_reversed") {
-            data.sort(sort_by_possible_wins_reverse);
-         } else {
-            sort_by = "wins";
-            data.sort(sort_by_wins);
-         }
+         var sort_by = get_sort_by_param(week_state);
+
+         sorter = require('./sort_week.js');
+         assign_rank(sorter,sort_by,data);
+         sorter.sort_week_results(sort_by,data);
+
          res.render('week_results', { year: req.params.year, week:req.params.wknum, data:data, week_state:week_state, sort_by:sort_by });
    });
 }; 
