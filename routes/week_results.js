@@ -1,5 +1,6 @@
 function PageData() {
    this.rank = null;
+   this.player_id = null;
    this.player_name = null;
    this.wins = null;
    this.losses = null;
@@ -8,7 +9,26 @@ function PageData() {
    this.possible_wins = null;
 }
 
-function assign_rank_by_wins(property,data) {
+function assign_rank_by_wins_and_losses(data) {
+   var wins = data[0].wins;
+   var losses = data[0].losses;
+   var rank = 1;
+   for (var i=0; i < data.length; i++) {
+      wins_changed = data[i].wins != wins;
+      losses_changed = data[i].losses != losses;
+      if (wins_changed) {
+         rank = i+1;
+         wins = data[i].wins;
+         losses = data[i].losses;
+      } else if (losses_changed) {
+         rank = i+1;
+         losses = data[i].losses;
+      }
+      data[i].rank = rank;
+   }
+}
+
+function assign_rank_by_property_wins(property,data) {
    var wins = data[0][property];
    var rank = 1;
    for (var i=0; i < data.length; i++) {
@@ -24,13 +44,13 @@ function assign_rank_by_wins(property,data) {
 function assign_rank(sorter,sort_by,data) {
    if (sort_by.indexOf('projected') == 0) {
       sorter.sort_week_results("projected",data);
-      assign_rank_by_wins("projected_wins",data);
+      assign_rank_by_property_wins("projected_wins",data);
    } else if (sort_by.indexOf('possible') == 0) {
       sorter.sort_week_results("possible",data);
-      assign_rank_by_wins("possible_wins",data);
+      assign_rank_by_property_wins("possible_wins",data);
    } else {
       sorter.sort_week_results("wins",data);
-      assign_rank_by_wins("wins",data);
+      assign_rank_by_wins_and_losses(data);
    }
 }
 
@@ -120,6 +140,7 @@ exports.get = function(req, res){
 
             var page_data = new PageData()
             page_data.rank = 1;
+            page_data.player_id = results.players[i].id;
             page_data.player_name = results.players[i].name;
             page_data.wins = calc.get_number_of_wins();
             page_data.losses = calc.get_number_of_losses();

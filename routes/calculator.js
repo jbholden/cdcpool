@@ -1,4 +1,5 @@
 // vim:  set shiftwidth=3 softtabstop=3
+// TODO:  player did not pick:  adjust projected and possible to 0, return "loss"
 /* 
    (done) this.get_team_picked_to_win
    (done) this.get_team_name_picked_to_win
@@ -35,6 +36,7 @@
    (done) this.get_game_result_string
    (done) this.get_favored_team_name
    (done) this.get_game_score_spread
+   (done) this.player_did_not_pick
 */
 
 function Calculator(games,picks,teams) {
@@ -226,7 +228,15 @@ function Calculator(games,picks,teams) {
       return null;
    }*/
 
+   this.player_did_not_pick = function(game_id) {
+      team_pick = this.get_team_picked_to_win(game_id);
+      return team_pick == null;
+   }
+
    this.did_player_win_game = function(game_id) {
+      if (this.player_did_not_pick(game_id)) {
+            return false;
+      }
       game = this.get_game(game_id);
       winner = this.get_pool_game_winner(game_id);
       if (winner != null) {
@@ -237,6 +247,9 @@ function Calculator(games,picks,teams) {
    }
 
    this.did_player_lose_game = function(game_id) {
+      if (this.player_did_not_pick(game_id)) {
+            return true;
+      }
       game = this.get_game(game_id);
       winner = this.get_pool_game_winner(game_id);
       if (winner != null) {
@@ -267,6 +280,9 @@ function Calculator(games,picks,teams) {
    }
 
    this.is_player_winning_game = function(game_id) {
+      if (this.player_did_not_pick(game_id)) {
+            return false;
+      }
       game = this.get_game(game_id);
       team_ahead = this.get_team_winning_pool_game(game_id);
       if (team_ahead != null) {
@@ -277,6 +293,9 @@ function Calculator(games,picks,teams) {
    }
 
    this.is_player_losing_game = function(game_id) {
+      if (this.player_did_not_pick(game_id)) {
+            return true;
+      }
       game = this.get_game(game_id);
       team_ahead = this.get_team_winning_pool_game(game_id);
       if (team_ahead != null) {
@@ -287,6 +306,9 @@ function Calculator(games,picks,teams) {
    }
 
    this.is_player_projected_to_win_game = function(game_id) {
+      if (this.player_did_not_pick(game_id)) {
+            return false;
+      }
       game_state = this.get_game_state(game_id);
       if (game_state == "final") {
          return this.did_player_win_game(game_id);
@@ -299,6 +321,9 @@ function Calculator(games,picks,teams) {
    }
 
    this.is_player_possible_to_win_game = function(game_id) {
+      if (this.player_did_not_pick(game_id)) {
+            return false;
+      }
       game_state = this.get_game_state(game_id);
       if (game_state == "final") {
          return this.did_player_win_game(game_id);

@@ -38,6 +38,26 @@ function sort_by_possible_wins_reverse(a,b) {
    if (a.possible_wins==b.possible_wins) { return 0; }
    return a.possible_wins < b.possible_wins? -1 : 1;
 }
+function sort_by_wins_then_losses(a,b) {
+   if (a.losses==b.losses) { return sort_by_wins(a,b); }
+   if (a.wins == b.wins && a.losses < b.losses) { return -1; }    
+   if (a.wins == b.wins && a.losses > b.losses) { return 1; }   
+   if (a.wins < b.wins && a.losses < b.losses) { return 1; }     
+   if (a.wins < b.wins && a.losses > b.losses) { return 1; }     
+   if (a.wins > b.wins && a.losses < b.losses) { return -1; }      
+   if (a.wins > b.wins && a.losses > b.losses) { return -1; }      
+   return null;
+}
+function sort_by_wins_then_losses_reverse(a,b) {
+   if (a.losses==b.losses) { return sort_by_wins(a,b); }
+   if (a.wins == b.wins && a.losses < b.losses) { return 1; }    
+   if (a.wins == b.wins && a.losses > b.losses) { return -1; }   
+   if (a.wins < b.wins && a.losses < b.losses) { return -1; }     
+   if (a.wins < b.wins && a.losses > b.losses) { return -1; }     
+   if (a.wins > b.wins && a.losses < b.losses) { return 1; }      
+   if (a.wins > b.wins && a.losses > b.losses) { return 1; }      
+   return null;
+}
 
 exports.sort_week_results = function(sort_by,data) {
    if (sort_by == "player") {
@@ -45,9 +65,9 @@ exports.sort_week_results = function(sort_by,data) {
    } else if (sort_by == "player_reversed") {
       data.sort(sort_by_player_descending);
    } else if (sort_by == "wins") {
-      data.sort(sort_by_wins);
+      data.sort(sort_by_wins_then_losses);
    } else if (sort_by == "wins_reversed") {
-      data.sort(sort_by_wins_reverse);
+      data.sort(sort_by_wins_then_losses_reverse);
    } else if (sort_by == "losses") {
       data.sort(sort_by_losses);
    } else if (sort_by == "losses_reversed") {

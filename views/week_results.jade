@@ -17,6 +17,12 @@ mixin display_header_with_sort_link(name,value)
       td(id="header")
          a(id="link-header",href="results?sort_by=#{name}")= value
 
+mixin display_player_with_link(entry)
+   td(id="player-content")
+      a(id="player-link",href="player/#{entry.player_id}/results")= entry.player_name
+
+
+
 doctype 5
 html(lang="en")
    head
@@ -41,13 +47,13 @@ html(lang="en")
             tr
                if week_state == "final"
                   td(id="content") #{entry.rank}
-                  td(id="player-content") #{entry.player_name}
+                  +display_player_with_link(entry)
                   +display_column("wins",entry.wins)
                   +display_column("losses",entry.losses)
                   td(id="content") #{entry.win_pct}
                else
                   td(id="content") #{entry.rank}
-                  td(id="player-content") #{entry.player_name}
+                  +display_player_with_link(entry)
                   +display_column("wins",entry.wins)
                   +display_column("losses",entry.losses)
                   td(id="content") #{entry.win_pct}
