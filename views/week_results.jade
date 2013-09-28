@@ -21,6 +21,17 @@ mixin display_player_with_link(entry)
    td(id="player-content")
       a(id="player-link",href="player/#{entry.player_id}/results")= entry.player_name
 
+mixin display_week_state_and_games_link()
+   table
+      tr
+         if week_state == "final"
+            td(id="final-week-state") final results
+         else if week_state == "in_progress"
+            td(id="in-progress-week-state") week is in progress
+         else if week_state == "not_started"
+            td(id="not-started-week-state") week has not started
+         td(id="game-link-column")
+            a(id="game-link",href="games") update game scores
 
 
 doctype 5
@@ -33,6 +44,7 @@ html(lang="en")
       div(class="page-subtitle") Week #{week} Leaderboard
       div(class="page-div")
       br
+      +display_week_state_and_games_link()
       table
          thead(class="results-header")
             td(id="header") Rank

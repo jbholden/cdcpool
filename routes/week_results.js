@@ -88,6 +88,13 @@ exports.get = function(req, res){
          }
          teams_model.findAll({where: ['id=ANY(?)',team_ids]}).complete(next);
       }]}, function(err,results) {
+         console.log("err:" + err);
+
+         if (results.week == null) {
+            console.log("week missing");
+            //res.render('week_missing', { year: req.params.year, week:req.params.wknum});
+            return
+         }
 
          var Calculator = require('./calculator.js');
 
@@ -136,6 +143,7 @@ exports.get = function(req, res){
 
             if (i==0) {
                week_state = calc.get_summary_state_of_all_games();
+               console.log("week_state=" + week_state);
             }
 
             var page_data = new PageData()

@@ -378,6 +378,7 @@ function Calculator(games,picks,teams) {
    this.at_least_one_game_in_progress = function() {
       in_progress = 0;
       for (var i=0; i < this.games.length; i++) {
+         console.log("game["+i+"].state=" + this.games[i].state);
         if (this.games[i].state == "in_progress") {
            in_progress++;
         }
@@ -389,10 +390,10 @@ function Calculator(games,picks,teams) {
       if (this.all_games_final()) {
          return "final";
       }
-      if (this.at_least_one_game_in_progress()) {
-         return "in_progress";
+      if (this.no_games_started()) {
+         return "not_started";
       }
-      return "not_started";
+      return "in_progress";
    }
 
    this.get_game_result_string = function(game_id) {

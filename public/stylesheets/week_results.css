@@ -27,6 +27,46 @@
    background-color: #0000E6;
 }
 
+#final-week-state {
+   color: black;
+   background-color: white;
+   font-size: 10pt;
+   font-family: Helvetica;
+   font-weight: 500;
+   white-space: nowrap;
+   text-align: left;
+   padding: 0px 4px;
+}
+
+#in-progress-week-state {
+   color: red;
+   background-color: white;
+   font-size: 10pt;
+   font-family: Helvetica;
+   font-weight: 500;
+   white-space: nowrap;
+   text-align: left;
+   padding: 0px 4px;
+}
+
+#not-started-week-state {
+   color: gray;
+   background-color: white;
+   font-size: 10pt;
+   font-family: Helvetica;
+   font-weight: 300;
+   text-align: left;
+   white-space: nowrap;
+   padding: 0px 4px;
+}
+
+#game-link-column {
+   font-size: 10pt;
+   text-align: left;
+   white-space: nowrap;
+   padding: 0px 4px;
+}
+
 .results-header {
    color: #E6E6FF;
    background-color: #0000E6;
@@ -84,6 +124,17 @@
    font-weight: 100;
    white-space: nowrap;
    text-align: left;
+}
+
+#game-link {
+   color: blue;
+   background-color: white;
+   font-size: 10pt;
+   font-family: Helvetica;
+   font-weight: 500;
+   white-space: nowrap;
+   text-align: left;
+   padding: 0px 4px;
 }
 
 #highlight-content {
