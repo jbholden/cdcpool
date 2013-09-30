@@ -6,9 +6,6 @@
 // - move error functions to another file?
 
 var express = require('express');
-var routes = require('./routes');
-var user = require('./routes/user');
-var wk_leaderboard = require('./routes/week_leaderboard.js');
 var update_games = require('./routes/update_games.js');
 var update_games_post = require('./routes/update_games_post.js');
 var player_results = require('./routes/player_results.js');
@@ -36,12 +33,8 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-/*
-app.get('/routes', routes.index);
-app.get('/users', user.list);*/
-
-app.get('/', function(request, response) {
-  response.send('Overall Leaderboard');
+app.get('/', function(req, res) {
+   res.redirect('2013/results');
 });
 
 app.param('wknum');
@@ -97,7 +90,6 @@ var check_for_player_missing = function(req,res,next) {
    });
 }
 
-//app.get('/:year/week/:wknum/leaderboard', wk_leaderboard.leaderboard);
 app.get('/:year/results', load_model, overall_results.get);
 app.get('/:year/week/:wknum/results', load_model, check_for_week_missing, week_results.get);
 app.get('/:year/week/:wknum/games', load_model, check_for_week_missing, update_games.get);
@@ -105,16 +97,6 @@ app.post('/:year/week/:wknum/games', load_model, check_for_week_missing, update_
 app.get('/:year/week/:wknum/player/:playernum/results', load_model, 
          check_for_week_missing, check_for_player_missing, player_results.get);
 
-
-/*
-app.get('/week/leaderboard', function(request, response) {
-  response.send('Weekly Leaderboard');
-});
-
-app.get('/week/player/picks', function(request, response) {
-  response.send('Player picks');
-});
-*/
 
 var port = process.env.PORT || 8080;
 app.listen(port, function() {
