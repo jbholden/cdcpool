@@ -33,6 +33,13 @@ mixin display_week_state_and_games_link()
          td(id="game-link-column")
             a(id="game-link",href="games") update game scores
 
+mixin display_line(week_state)
+   tr
+      if week_state == "final"
+         td(id="table-line",colspan="5")
+      else
+         td(id="table-line",colspan="7")
+
 
 doctype 5
 html(lang="en")
@@ -71,5 +78,6 @@ html(lang="en")
                   td(id="content") #{entry.win_pct}
                   +display_column("projected",entry.projected_wins)
                   +display_column("possible",entry.possible_wins)
+            +display_line(week_state)
       
 

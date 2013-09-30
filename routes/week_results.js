@@ -77,7 +77,7 @@ exports.get = function(req, res){
       games: ['week',function(next,results) {
          games_model.findAll({where: {id:results.week.games}}).complete(next);
       }],
-      picks: ['games',function(next,results) {
+      picks: ['week',function(next,results) {
          picks_model.findAll({where: {game:results.week.games}}).complete(next);
       }],
       teams: ['games',function(next,results) {

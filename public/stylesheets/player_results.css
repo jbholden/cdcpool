@@ -32,6 +32,7 @@
 #table-line {
    width: 100%;
    border-bottom: 1px solid lightgray;
+   padding: 0 0 0 0;
 }
 
 .results-header {

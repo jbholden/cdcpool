@@ -1,0 +1,82 @@
+mixin display_column(name,value)
+   - var reverse_name = name + "_reversed"
+   if name == sort_by || reverse_name == sort_by
+      td(id="highlight-content") #{value}
+   else
+      td(id="content") #{value}
+
+mixin display_header_with_sort_link(name,value)
+   - var reverse_name = name + "_reversed"
+   if name == sort_by
+      td(id="header")
+         a(id="link-header",href="results?sort_by=#{name}_reversed")= value
+   else if reverse_name == sort_by
+      td(id="header")
+         a(id="link-header",href="results?sort_by=#{name}")= value
+   else
+      td(id="header")
+         a(id="link-header",href="results?sort_by=#{name}")= value
+
+mixin display_week_headers()
+    - var num_weeks = data[0].weeks.length
+    - for (var week_number=1; week_number <= num_weeks; week_number++)
+        td(id="header") Wk#{week_number}
+    if data[0].last_week_state == "in_progress"
+        td(id="header") Wk#{num_weeks} Projected
+        td(id="header") Wk#{num_weeks} Possible
+    else if data[0].last_week_state == "not_started"
+        td(id="header") Wk#{num_weeks} Possible
+
+mixin display_last_week(entry)
+    if entry.last_week_state == "in_progress"
+        td(id="content") #{entry.last_week_projected}
+        td(id="content") #{entry.last_week_possible}
+    else if entry.last_week_state == "not_started"
+        td(id="content") #{entry.last_week_possible}
+
+mixin display_line(entry)
+   tr
+      if entry.last_week_state == "final"
+         - var num_columns = 4 + entry.weeks.length
+      else if entry.last_week_state == "in_progress"
+         - var num_columns = 7 + entry.weeks.length
+      else if entry.last_week_state == "not_started"
+         - var num_columns = 5 + entry.weeks.length
+      td(id="table-line",colspan="#{num_columns}")
+
+mixin display_week_results(entry)
+    - for (var i=0; i < entry.weeks.length; i++)
+         - var week_number = i+1
+         td(id="content") 
+            a(id="week-link",href="week/#{week_number}/player/#{entry.player_id}/results")= entry.weeks[i]
+
+doctype 5
+html(lang="en")
+   head
+      title CDC Pool #{year}  Leaderboard
+      link(rel="stylesheet" type="text/css" href="/stylesheets/overall_results.css")
+   body
+      div(class="page-title") CDC Football Pool #{year}
+      div(class="page-subtitle") Overall Leaderboard
+      div(class="page-div")
+      br
+      table
+         thead(class="results-header")
+            td(id="header") Rank
+            +display_header_with_sort_link('player','Player')
+            +display_header_with_sort_link('overall','Overall')
+            if data[0].last_week_state == "in_progress"
+               +display_header_with_sort_link('projected','Projected')
+            +display_header_with_sort_link('possible','Possible')
+            +display_week_headers()
+         each entry in data
+            tr
+                td(id="content") #{entry.rank}
+                td(id="player-content") #{entry.player_name}
+                +display_column('overall',entry.overall)
+                if entry.last_week_state == "in_progress"
+                    +display_column('projected',entry.projected)
+                +display_column('possible',entry.possible)
+                +display_week_results(entry)
+                +display_last_week(entry) 
+            +display_line(entry)   

@@ -13,6 +13,7 @@ var update_games = require('./routes/update_games.js');
 var update_games_post = require('./routes/update_games_post.js');
 var player_results = require('./routes/player_results.js');
 var week_results = require('./routes/week_results.js');
+var overall_results = require('./routes/overall_results.js');
 var http = require('http');
 var path = require('path');
 
@@ -97,6 +98,7 @@ var check_for_player_missing = function(req,res,next) {
 }
 
 //app.get('/:year/week/:wknum/leaderboard', wk_leaderboard.leaderboard);
+app.get('/:year/results', load_model, overall_results.get);
 app.get('/:year/week/:wknum/results', load_model, check_for_week_missing, week_results.get);
 app.get('/:year/week/:wknum/games', load_model, check_for_week_missing, update_games.get);
 app.post('/:year/week/:wknum/games', load_model, check_for_week_missing, update_games_post.post);
