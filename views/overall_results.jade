@@ -1,3 +1,5 @@
+include title_bar
+
 mixin display_column(name,value)
    - var reverse_name = name + "_reversed"
    if name == sort_by || reverse_name == sort_by
@@ -54,11 +56,11 @@ doctype 5
 html(lang="en")
    head
       title CDC Pool #{year}  Leaderboard
+      link(rel="stylesheet" type="text/css" href="/stylesheets/title_bar.css")
       link(rel="stylesheet" type="text/css" href="/stylesheets/overall_results.css")
    body
-      div(class="page-title") CDC Football Pool #{year}
-      div(class="page-subtitle") Overall Leaderboard
-      div(class="page-div")
+      +display_page_title("Leaderboard")
+      +display_overall_link_bar(year,data[0].weeks.length)
       br
       table
          thead(class="results-header")

@@ -1,3 +1,5 @@
+include title_bar
+
 mixin display_column(name,value)
    - var reverse_name = name + "_reversed"
    if name == sort_by || reverse_name == sort_by
@@ -45,11 +47,12 @@ doctype 5
 html(lang="en")
    head
       title CDC Pool #{year} Week #{week}  Leaderboard
+      link(rel="stylesheet" type="text/css" href="/stylesheets/title_bar.css")
       link(rel="stylesheet" type="text/css" href="/stylesheets/week_results.css")
    body
-      div(class="page-title") CDC Football Pool #{year}
-      div(class="page-subtitle") Week #{week} Leaderboard
-      div(class="page-div")
+      - var page_title = "Week " + week + " Leaderboard"
+      +display_page_title("Leaderboard")
+      +display_week_link_bar(year,week,num_weeks)
       br
       +display_week_state_and_games_link()
       table

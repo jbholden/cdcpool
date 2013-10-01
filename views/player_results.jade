@@ -1,3 +1,5 @@
+include title_bar
+
 mixin game_result(entry)
     if entry.result == "win"
         td(class="result-row")
@@ -95,15 +97,14 @@ doctype 5
 html(lang="en")
    head
       title CDC Pool Week #{week} Player #{player} Results
+      link(rel="stylesheet" type="text/css" href="/stylesheets/title_bar.css")
       link(rel="stylesheet" type="text/css" href="/stylesheets/player_results.css")
    body
-      div(class="page-title") CDC Football Pool #{year}
-      div(class="page-subtitle") Week #{week} Results
-      div(class="page-subtitle") #{player}
-      div(class="page-div")
+      - var page_title = player + " Results"
+      +display_page_title(page_title)
+      +display_week_link_bar(year,week,5)
       br
       +display_summary(summary)
-      //+display_summary_vertically(summary)
       table
         thead(class="results-header")
             td(id="pick-header") Player Pick

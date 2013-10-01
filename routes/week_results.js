@@ -68,6 +68,9 @@ exports.get = function(req, res){
    var async = require('async');
 
    async.auto({
+      num_weeks: function(next) {
+         weeks_model.count({where:{year:year_number}}).complete(next);
+      },
       week: function(next) {
          weeks_model.find({where:{year:year_number,number:week_number}}).complete(next);
       },
@@ -164,6 +167,6 @@ exports.get = function(req, res){
          assign_rank(sorter,sort_by,data);
          sorter.sort_week_results(sort_by,data);
 
-         res.render('week_results', { year: req.params.year, week:req.params.wknum, data:data, week_state:week_state, sort_by:sort_by });
+         res.render('week_results', { year: req.params.year, week:req.params.wknum, data:data, week_state:week_state, sort_by:sort_by, num_weeks:results.num_weeks });
    });
 }; 
