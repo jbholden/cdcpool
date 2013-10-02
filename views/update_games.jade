@@ -1,23 +1,25 @@
 // TODO:  move input names to mixin function?
+include title_bar
 
 mixin final_checkbox(entry)
-   if entry.state == "final"
-      input(type='checkbox', name='#{entry.final_checkbox_name}', checked="checked", value="checked")
-      | Final
-   else
-      input(type='checkbox', name='#{entry.final_checkbox_name}', value="checked")
-      | Final
+   span(id="final")
+      if entry.state == "final"
+         input(type='checkbox', name='#{entry.final_checkbox_name}', checked="checked", value="checked")
+         | Final
+      else
+         input(type='checkbox', name='#{entry.final_checkbox_name}', value="checked")
+         | Final
 
 doctype 5
 html(lang="en")
    head
       title CDC Pool Week #{week} Games
+      link(rel="stylesheet" type="text/css" href="/stylesheets/title_bar.css")
       link(rel="stylesheet" type="text/css" href="/stylesheets/update_games.css")
    body
       form(action="games",method="post")
-         div(class="page-title") CDC Football Pool #{year}
-         div(class="page-subtitle") Week #{week} Games
-         div(class="page-div")
+         - var page_title = "Week " + week + " Games"
+         +display_page_title(page_title)
          br
          each entry in data
             table

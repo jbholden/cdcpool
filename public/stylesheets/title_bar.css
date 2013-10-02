@@ -1,29 +1,29 @@
 .title-bar {
    color: lightgray;
-   background-color: black;
+   background-color: white;
    width: 100%;
    padding: 1px 4px;
    font-size: 16pt;
    font-family: Helvetica;
-   font-weight: 100;
+   font-weight: 500;
 }
 
 #pool-title {
-   color: lightgray;
+   color: blue;
    text-align: left;
    width: 1em;
    white-space: nowrap;
 }
 
 #page-title {
-   color: white;
+   color: gray;
    text-align: left;
    padding: 1px 12pt;
 }
 
 #link-bar-highlighted {
    color: white;
-   background-color: #0000E6;
+   background-color: lightgray;
    font-size: 12pt;
    padding: 2px 4px;
    font-family: Helvetica;
@@ -33,7 +33,7 @@
 }
 
 #link-bar-label {
-   color: gray;
+   color: lightgray;
    background-color: white;
    font-size: 12pt;
    padding: 0px 4px;
@@ -44,7 +44,7 @@
 }
 
 #link-bar-week-number {
-   color: gray;
+   color: lightgray;
    background-color: white;
    font-size: 12pt;
    padding: 0px 4px;
@@ -55,7 +55,7 @@
 }
 
 #link-bar-week-number-link {
-   color: gray;
+   color: lightgray;
    background-color: white;
    font-size: 12pt;
    padding: 0px 4px;
@@ -67,7 +67,7 @@
 
 #link-bar-week-number-highlight {
    color: white;
-   background-color: darkgray;
+   background-color: lightgray;
    font-size: 12pt;
    padding: 2px 8px;
    font-family: Helvetica;
@@ -78,7 +78,7 @@
 }
 
 #link-bar-overall-link {
-   color: gray;
+   color: lightgray;
    background-color: white;
    font-size: 12pt;
    padding: 0px 4px;
@@ -89,8 +89,20 @@
    text-decoration:none;
 }
 
-.link-bar-div {
+#link-bar-week-link {
+   color: lightgray;
+   background-color: white;
+   font-size: 12pt;
+   padding: 0px 4px;
+   font-family: Helvetica;
+   white-space: nowrap;
+   width: 5em;
+   text-align: center;
+   text-decoration:none;
+}
+
+.title-bar-div {
    width: 100%;
    padding: 1px;
-   background-color: black;
+   background-color: lightgray;
 }

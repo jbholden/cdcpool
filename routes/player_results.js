@@ -13,6 +13,7 @@ function PageData() {
 }
 
 function PageSummaryData() {
+   this.player_id = null;
    this.wins = null;
    this.losses = null;
    this.win_pct = null;
@@ -35,6 +36,9 @@ exports.get = function(req, res){
    var async = require('async');
 
    async.auto({
+      num_weeks: function(next) {
+         weeks_model.count({where:{year:year_number}}).complete(next);
+      },
       week: function(next) {
          weeks_model.find({where:{year:year_number,number:week_number}}).complete(next);
       },
@@ -83,6 +87,7 @@ exports.get = function(req, res){
             data.push(page_data);
          }
          var summary_data = new PageSummaryData();
+         summary_data.player_id = results.player.id;
          summary_data.wins = calc.get_number_of_wins();
          summary_data.losses = calc.get_number_of_losses();
          summary_data.win_pct = calc.get_win_pct_string(summary_data.wins,summary_data.losses);
@@ -90,6 +95,6 @@ exports.get = function(req, res){
          summary_data.projected_wins = calc.get_number_of_projected_wins();
          summary_data.week_state = calc.get_summary_state_of_all_games();
 
-         res.render('player_results', { year: req.params.year, week:req.params.wknum, player:player_name,data:data,summary:summary_data });
+         res.render('player_results', { year: req.params.year, week:req.params.wknum, player:player_name,data:data,summary:summary_data,num_weeks:results.num_weeks });
    });
 }; 

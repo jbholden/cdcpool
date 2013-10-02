@@ -3,31 +3,43 @@ mixin display_page_title(page_title)
       tr
          td(id="pool-title") CDC Football Pool #{year}
          td(id="page-title") #{page_title}
+   div(class="title-bar-div")
 
-mixin display_link_bar(highlight)
-   if highlight == "overall"
-      +display_overall_link_bar()
 
 mixin display_overall_link_bar(year,num_weeks)
    table
       tr
          td(id="link-bar-highlighted") OVERALL
-         td(id="link-bar-label") WEEK
+         td(id="link-bar-label") 
+            a(id="link-bar-week-link",href="/#{year}/week/#{num_weeks}/results") WEEK
          - for (var week_number=1; week_number <= num_weeks; week_number++)
             td(id="link-bar-week-number")
                a(id="link-bar-week-number-link",href="/#{year}/week/#{week_number}/results") #{week_number}
-   div(class="link-bar-div")
 
 mixin display_week_link_bar(year,page_week_number,num_weeks)
    table
       tr
-         td(id="link-bar-label")
+         td
             a(id="link-bar-overall-link",href="/#{year}/results") OVERALL
-         td(id="link-bar-highlighted") WEEK
+         td(id="link-bar-label") 
+            a(id="link-bar-week-link",href="/#{year}/week/#{page_week_number}/results") WEEK
          - for (var week_number=1; week_number <= num_weeks; week_number++)
             td(id="link-bar-week-number")
                if week_number == page_week_number
                   a(id="link-bar-week-number-highlight",href="/#{year}/week/#{week_number}/results") #{week_number}
                else
                   a(id="link-bar-week-number-link",href="/#{year}/week/#{week_number}/results") #{week_number}
-   div(class="link-bar-div")
+
+mixin display_player_week_link_bar(year,page_week_number,num_weeks,player_id)
+   table
+      tr
+         td
+            a(id="link-bar-overall-link",href="/#{year}/results") OVERALL
+         td(id="link-bar-label") 
+            a(id="link-bar-week-link",href="/#{year}/week/#{page_week_number}/results") WEEK
+         - for (var week_number=1; week_number <= num_weeks; week_number++)
+            td(id="link-bar-week-number")
+               if week_number == page_week_number
+                  a(id="link-bar-week-number-highlight",href="/#{year}/week/#{week_number}/player/#{player_id}/results") #{week_number}
+               else
+                  a(id="link-bar-week-number-link",href="/#{year}/week/#{week_number}/player/#{player_id}/results") #{week_number}

@@ -212,6 +212,6 @@ exports.post = function(req, res){
          m.save(['home_score','away_score','state']).complete(next);
          
       }]}, function(err, results) {
-         res.redirect(req.params.year+'/week/'+req.params.wknum+'/games')
+         res.redirect(req.params.year+'/week/'+req.params.wknum+'/results')
       });
 }

@@ -1,34 +1,5 @@
 /* css help?  http://kyleschaeffer.com/development/css-font-size-em-vs-px-vs-pt-vs/ */
 
-.page-title {
-   color: white;
-   background-color: #0000E6;
-   /*background: -webkit-linear-gradient(top,#2F2727,#1a82f7);*/
-   width: 100%;
-   padding: 1px 4px;
-   font-size: 16pt;
-   font-family: Helvetica;
-   font-weight: 100;
-   text-align: center;
-}
-
-.page-subtitle {
-   color: black;
-   background-color: lightyellow;
-   width: 100%;
-   padding: 4px;
-   font-size: 12pt;
-   font-family: Helvetica;
-   font-weight: 100;
-   text-align: center;
-}
-
-.page-div {
-   width: 100%;
-   padding: 1px;
-   background-color: #0000E6;
-}
-
 #table-line {
    width: 100%;
    border-bottom: 1px solid lightgray;
@@ -50,11 +21,6 @@
 }
 
 #result-header {
-   text-align: center;
-   padding: 1px 4px;
-}
-
-#score-header {
    text-align: center;
    padding: 1px 4px;
 }
@@ -228,15 +194,4 @@
    font-size: 10pt;
    text-align: center;
    white-space: nowrap;
-}
-
-#game-status {
-   background-color: white;
-   font-size: small;
-   white-space: nowrap;
-}
-
-#team-score {
-   background-color: white;
-   text-align: center;
 }

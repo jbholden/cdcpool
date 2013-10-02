@@ -46,7 +46,7 @@ mixin display_spread(entry)
                 td(id="spread-value") #{entry.favored_spread}
             tr
                 if entry.game_state == "final"
-                    td(id="spread-label") Winner
+                    td(id="spread-label") Result
                     td(id="spread-team") #{entry.winning_team}
                     td(id="spread-value") #{entry.game_spread}.0
                 else if entry.game_state == "in_progress"
@@ -102,7 +102,8 @@ html(lang="en")
    body
       - var page_title = player + " Results"
       +display_page_title(page_title)
-      +display_week_link_bar(year,week,5)
+      +display_player_week_link_bar(year,week,num_weeks,summary.player_id)
+      br
       br
       +display_summary(summary)
       table
