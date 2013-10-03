@@ -225,3 +225,13 @@
    text-align: left;
    white-space: nowrap;
 }
+#game-link {
+   color: darkgray;
+   background-color: white;
+   font-size: 10pt;
+   font-family: Helvetica;
+   font-weight: 500;
+   white-space: nowrap;
+   text-align: left;
+   padding: 0px 4px;
+}
