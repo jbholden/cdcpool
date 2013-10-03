@@ -10,6 +10,8 @@ function PageData() {
    this.favored_spread = null;
    this.winning_team = null;
    this.game_spread = null;
+   this.game_quarter = null;
+   this.game_time = null;
 }
 
 function PageSummaryData() {
@@ -82,7 +84,10 @@ exports.get = function(req, res){
             } else if (results.games[i].state == "in_progress") {
                page_data.winning_team = calc.get_team_name_winning_game(game_id);
                //page_data.winning_team = calc.get_team_name_winning_pool_game(game_id);
-               page_data.game_spread = calc.get_game_score_spread(game_id);
+               page_data.game_quarter = results.games[i].quarter
+               page_data.game_time = results.games[i].time
+            } else if (results.games[i].state == "not_started") {
+               page_data.game_time = results.games[i].time
             }
             data.push(page_data);
          }

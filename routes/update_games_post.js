@@ -1,9 +1,11 @@
-// TODO:  handle case where wrong score format entered
+// TODO:  handle case where wrong score format entered (this is not causing any issues)
 
 function PageData() {
    this.game_id = null;
    this.away_score = null;
    this.home_score = null;
+   this.quarter = null;
+   this.time = null;
    this.state = null;
 }
 
@@ -70,6 +72,14 @@ exports.post = function(req, res){
          game_id = extract_id(property);
          idx = get_game_index_and_create(game_id,data);
          data[idx].home_score = req.body[property];
+      } else if (property.indexOf('quarter_') == 0) {
+         game_id = extract_id(property);
+         idx = get_game_index_and_create(game_id,data);
+         data[idx].quarter = req.body[property];
+      } else if (property.indexOf('time_') == 0) {
+         game_id = extract_id(property);
+         idx = get_game_index_and_create(game_id,data);
+         data[idx].time = req.body[property];
       } else if (property.indexOf('final') == 0) {
          game_id = extract_id(property);
          idx = get_game_index_and_create(game_id,data);
@@ -137,7 +147,9 @@ exports.post = function(req, res){
          m.away_score = d.away_score;
          m.home_score = d.home_score;
          m.state = d.state;
-         m.save(['home_score','away_score','state']).complete(next);
+         m.quarter = d.quarter;
+         m.time = d.time;
+         m.save(['home_score','away_score','state','quarter','time']).complete(next);
       }],
       game1_save: ['game1_find',function(next,results) {
          var d = data[1];
@@ -145,7 +157,9 @@ exports.post = function(req, res){
          m.away_score = d.away_score;
          m.home_score = d.home_score;
          m.state = d.state;
-         m.save(['home_score','away_score','state']).complete(next);
+         m.quarter = d.quarter;
+         m.time = d.time;
+         m.save(['home_score','away_score','state','quarter','time']).complete(next);
       }],
       game2_save: ['game2_find',function(next,results) {
          var d = data[2];
@@ -153,7 +167,9 @@ exports.post = function(req, res){
          m.away_score = d.away_score;
          m.home_score = d.home_score;
          m.state = d.state;
-         m.save(['home_score','away_score','state']).complete(next);
+         m.quarter = d.quarter;
+         m.time = d.time;
+         m.save(['home_score','away_score','state','quarter','time']).complete(next);
       }],
       game3_save: ['game3_find',function(next,results) {
          var d = data[3];
@@ -161,7 +177,9 @@ exports.post = function(req, res){
          m.away_score = d.away_score;
          m.home_score = d.home_score;
          m.state = d.state;
-         m.save(['home_score','away_score','state']).complete(next);
+         m.quarter = d.quarter;
+         m.time = d.time;
+         m.save(['home_score','away_score','state','quarter','time']).complete(next);
       }],
       game4_save: ['game4_find',function(next,results) {
          var d = data[4];
@@ -169,7 +187,9 @@ exports.post = function(req, res){
          m.away_score = d.away_score;
          m.home_score = d.home_score;
          m.state = d.state;
-         m.save(['home_score','away_score','state']).complete(next);
+         m.quarter = d.quarter;
+         m.time = d.time;
+         m.save(['home_score','away_score','state','quarter','time']).complete(next);
       }],
       game5_save: ['game5_find',function(next,results) {
          var d = data[5];
@@ -177,7 +197,9 @@ exports.post = function(req, res){
          m.away_score = d.away_score;
          m.home_score = d.home_score;
          m.state = d.state;
-         m.save(['home_score','away_score','state']).complete(next);
+         m.quarter = d.quarter;
+         m.time = d.time;
+         m.save(['home_score','away_score','state','quarter','time']).complete(next);
       }],
       game6_save: ['game6_find',function(next,results) {
          var d = data[6];
@@ -185,7 +207,9 @@ exports.post = function(req, res){
          m.away_score = d.away_score;
          m.home_score = d.home_score;
          m.state = d.state;
-         m.save(['home_score','away_score','state']).complete(next);
+         m.quarter = d.quarter;
+         m.time = d.time;
+         m.save(['home_score','away_score','state','quarter','time']).complete(next);
       }],
       game7_save: ['game7_find',function(next,results) {
          var d = data[7];
@@ -193,7 +217,9 @@ exports.post = function(req, res){
          m.away_score = d.away_score;
          m.home_score = d.home_score;
          m.state = d.state;
-         m.save(['home_score','away_score','state']).complete(next);
+         m.quarter = d.quarter;
+         m.time = d.time;
+         m.save(['home_score','away_score','state','quarter','time']).complete(next);
       }],
       game8_save: ['game8_find',function(next,results) {
          var d = data[8];
@@ -201,7 +227,9 @@ exports.post = function(req, res){
          m.away_score = d.away_score;
          m.home_score = d.home_score;
          m.state = d.state;
-         m.save(['home_score','away_score','state']).complete(next);
+         m.quarter = d.quarter;
+         m.time = d.time;
+         m.save(['home_score','away_score','state','quarter','time']).complete(next);
       }],
       game9_save: ['game9_find',function(next,results) {
          var d = data[9];
@@ -209,7 +237,9 @@ exports.post = function(req, res){
          m.away_score = d.away_score;
          m.home_score = d.home_score;
          m.state = d.state;
-         m.save(['home_score','away_score','state']).complete(next);
+         m.quarter = d.quarter;
+         m.time = d.time;
+         m.save(['home_score','away_score','state','quarter','time']).complete(next);
          
       }]}, function(err, results) {
          res.redirect(req.params.year+'/week/'+req.params.wknum+'/results')

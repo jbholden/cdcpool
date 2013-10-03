@@ -17,13 +17,39 @@ mixin game_result(entry)
         td(class="result-row")
             div(id="result-content") #{entry.result}
 
-mixin game_state(entry)
+mixin game_status_bottom_row(entry)
+    - var quarter_and_time_present = entry.game_quarter != "" && entry.game_time != ""
+    - var quarter_and_time_missing = entry.game_quarter == "" && entry.game_time == ""
+    - var quarter_only = entry.game_quarter != "" && entry.game_time == ""
+    - var time_only = entry.game_quarter == "" && entry.game_time != ""
+    - var time_present = entry.game_time != ""
+
     if entry.game_state == "final"
         td(id="game-final") final
     else if entry.game_state == "in_progress"
-        td(id="game-in-progress") in progress
+        if quarter_and_time_missing
+            td(id="game-in-progress") in progress
+        else if quarter_and_time_present
+            td(id="game-time-in-progress") #{entry.game_time}
+        else if quarter_only
+            td(id="game-quarter") #{entry.game_quarter}
+        else if time_only
+            td(id="game-time-in-progress") #{entry.game_time}
+    else if time_present
+        td(id="game-time") #{entry.game_time}
     else
         td
+
+mixin game_status_top_row(entry)
+    - var quarter_and_time_present = entry.game_quarter != "" && entry.game_time != ""
+    if entry.game_state == "in_progress"
+        if quarter_and_time_present
+            td(id="game-quarter") #{entry.game_quarter}
+        else
+            td
+    else
+        td
+
 
 mixin display_game(entry)
     td(class="result-row")
@@ -31,11 +57,11 @@ mixin display_game(entry)
             tr
                 td(id="team-content") #{entry.away_team}
                 td(id="score-content") #{entry.away_score}
-                td
+                +game_status_top_row(entry)
             tr
                 td(id="team-content") #{entry.home_team}
                 td(id="score-content") #{entry.home_score}
-                +game_state(entry)
+                +game_status_bottom_row(entry)
 
 mixin display_spread(entry)
     td(class="result-row")

@@ -61,3 +61,81 @@
    font-family: Helvetica;
    font-weight: 500;
 }
+
+#game-qtr {
+   background-color: lightgray;
+   text-align: right;
+   color : black;
+   font-family: Helvetica;
+   font-weight: 500;
+   font-size: small;
+}
+#game-time {
+   background-color: lightgray;
+   text-align: right;
+   color : black;
+   font-family: Helvetica;
+   font-weight: 500;
+   font-size: small;
+}
+.instructions {
+   background-color: white;
+   color : gray;
+   font-family: Helvetica;
+   font-weight: 1000; 
+   font-size: small;
+   text-decoration: underline;
+}  
+#instructions-header {
+   text-align: left;
+   background-color: white;
+   color : darkgray;
+   font-family: Helvetica;
+   font-weight: 500; 
+   font-size: small;
+   text-decoration: underline;
+}  
+   
+#instructions-number {
+   text-align: center;
+   background-color: white;
+   color : darkgray;
+   font-family: Helvetica;
+   font-weight: 500; 
+   font-size: small;
+}  
+#instructions-content {
+   text-align: left;
+   background-color: white;
+   color : darkgray;
+   font-family: Helvetica;
+   font-weight: 500; 
+   font-size: small;
+}
+#instructions-format {
+   text-align: left;
+   background-color: white;
+   color : darkgray;
+   font-family: Helvetica;
+   font-weight: 500;
+   font-size: small;
+}
+#instr-link {
+   text-align: center;
+   background-color: white;
+   color : gray;
+   font-family: Helvetica;
+   font-weight: 500;
+   font-size: small;
+   text-decoration: none;
+   padding: 1px 4px;
+}
+#instr-title {
+   text-align: left;
+   background-color: white;
+   color : gray;
+   font-family: Helvetica;
+   font-weight: 500;
+   font-size: small;
+   padding: 1px 4px;
+}

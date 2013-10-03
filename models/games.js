@@ -24,7 +24,7 @@ module.exports = function(sequelize, DataTypes) {
       spread: DataTypes.FLOAT,    
       state: DataTypes.TEXT,    
       quarter: DataTypes.TEXT,    
-      time_left: DataTypes.TEXT
+      time: DataTypes.TEXT
   }, {
     timestamps: false,
     instanceMethods: {

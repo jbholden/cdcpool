@@ -1,5 +1,4 @@
 // vim:  set shiftwidth=3 softtabstop=3
-// TODO:  player did not pick:  adjust projected and possible to 0, return "loss"
 /* 
    (done) this.get_team_picked_to_win
    (done) this.get_team_name_picked_to_win

@@ -181,7 +181,7 @@
    font-family: Helvetica;
    font-weight: 100;
    font-size: 10pt;
-   text-align: center;
+   text-align: left;
    white-space: nowrap;
 }
 
@@ -192,6 +192,36 @@
    font-family: Helvetica;
    font-weight: 100;
    font-size: 10pt;
-   text-align: center;
+   text-align: left;
+   white-space: nowrap;
+}
+#game-quarter {
+   color: red;
+   background-color: white;
+   padding: 1px 4px;
+   font-family: Helvetica;
+   font-weight: 100;
+   font-size: 10pt;
+   text-align: left;
+   white-space: nowrap;
+}
+#game-time-in-progress {
+   color: red;
+   background-color: white;
+   padding: 1px 4px;
+   font-family: Helvetica;
+   font-weight: 100;
+   font-size: 10pt;
+   text-align: left;
+   white-space: nowrap;
+}
+#game-time {
+   color: gray;
+   background-color: white;
+   padding: 1px 4px;
+   font-family: Helvetica;
+   font-weight: 100;
+   font-size: 10pt;
+   text-align: left;
    white-space: nowrap;
 }

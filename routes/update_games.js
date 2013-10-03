@@ -6,9 +6,11 @@ function PageData() {
    this.home_score = null;
    this.state = null;
    this.quarter = null;
-   this.time_left = null;
+   this.time = null;
    this.away_score_input_name = null;
    this.home_score_input_name = null;
+   this.qtr_input_name = null;
+   this.time_input_name = null;
    this.final_checkbox_name = null;
 }
 
@@ -64,6 +66,13 @@ exports.get = function(req, res){
             return ""+score;
          };
 
+         var get_value_or_empty_string = function(value) {
+            if (value == null) {
+                return "";
+            }
+            return value;
+         };
+
          var data = new Array();
          for (var i=0; i < results.games.length; i++) {
             game = results.games[i]
@@ -73,12 +82,15 @@ exports.get = function(req, res){
             page_data.away_score = get_score_str(game.away_score);
             page_data.home_score = get_score_str(game.home_score);
             page_data.state = game.state;
-            page_data.quarter = game.quarter;
-            page_data.time_left = game.time_left;
+
+            page_data.quarter = get_value_or_empty_string(game.quarter);
+            page_data.time = get_value_or_empty_string(game.time);
 
             page_data.game_id = game.id;
             page_data.away_score_input_name = "away_score_" + game.id;
             page_data.home_score_input_name = "home_score_" + game.id;
+            page_data.qtr_input_name = "quarter_" + game.id;
+            page_data.time_input_name = "time_" + game.id;
             page_data.final_checkbox_name = "final_" + game.id;
 
             data.push(page_data);
