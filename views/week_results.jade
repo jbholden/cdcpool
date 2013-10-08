@@ -38,9 +38,20 @@ mixin display_week_state_and_games_link()
 mixin display_line(week_state)
    tr
       if week_state == "final"
-         td(id="table-line",colspan="5")
+         td(id="table-line",colspan="6")
       else
          td(id="table-line",colspan="7")
+
+mixin display_week_winner(entry)
+   if winner == null
+      td(id="week-winner-blank")
+   else if winner.tiebreaker == 0
+      if winner.winner.id == entry.player_id
+         td(id="week-winner") WINNER
+      else
+         td(id="week-winner-blank")
+   else
+      td(id="week-winner-blank") WINNER
 
 
 doctype 5
@@ -65,6 +76,8 @@ html(lang="en")
             if week_state != "final"
                +display_header_with_sort_link('projected','Projected')
                +display_header_with_sort_link('possible','Possible')
+            else
+               td
          each entry in data
             tr
                if week_state == "final"

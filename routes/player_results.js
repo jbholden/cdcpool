@@ -51,7 +51,7 @@ exports.get = function(req, res){
          picks_model.findAll({where: {player:player_number,game:results.week.games}}).complete(next);
       }],
       games: ['week',function(next,results) {
-         games_model.findAll({where: {id:results.week.games}}).complete(next);
+         games_model.findAll({where: {id:results.week.games},order: 'number'}).complete(next);
       }],
       teams: ['games',function(next,results) {
          var team_ids = new Array();
@@ -84,6 +84,7 @@ exports.get = function(req, res){
             } else if (results.games[i].state == "in_progress") {
                page_data.winning_team = calc.get_team_name_winning_game(game_id);
                //page_data.winning_team = calc.get_team_name_winning_pool_game(game_id);
+               page_data.game_spread = calc.get_game_score_spread(game_id);
                page_data.game_quarter = results.games[i].quarter
                page_data.game_time = results.games[i].time
             } else if (results.games[i].state == "not_started") {

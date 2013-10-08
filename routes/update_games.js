@@ -40,7 +40,7 @@ exports.get = function(req, res){
          weeks_model.find({where:{year:year_number,number:week_number}}).complete(next);
       },
       games: ['week',function(next,results) {
-         games_model.findAll({where: ['id=ANY(?)',results.week.games]}).complete(next);
+         games_model.findAll({where: ['id=ANY(?)',results.week.games],order:'number'}).complete(next);
       }], 
       teams: ['games',function(next,results) {
          var team_ids = new Array();

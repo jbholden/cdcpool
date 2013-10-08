@@ -1,3 +1,5 @@
+// TODO:  move winner determination to another file
+
 function PageData() {
    this.rank = null;
    this.player_id = null;
@@ -26,6 +28,45 @@ function assign_rank_by_wins_and_losses(data) {
       }
       data[i].rank = rank;
    }
+}
+
+function get_week_winner(data,results) {
+   player_ids = get_players_tied_for_first(data);
+   if (player_ids.length == 0) { return null; }
+   if (player_ids.length == 1) { return player_ids[0]; }
+
+   player_picks = get_player_picks_in_featured_game(player_ids,results);
+   if (player_picks.length == 0) { return null; }
+
+   var calc = new Calculator(results.games,player_picks,results.teams);
+   var winner = calc.get_tie_breaker_winner(player_picks);
+   return winner;
+}
+
+function get_player_picks_in_featured_game(player_ids,results) {
+   var picks = new Array()
+   for (var i=0; i < player_ids.length; i++) {
+      var player_picks = get_player_picks(player_ids[i],results.picks);
+      var calc = new Calculator(results.games,player_picks,results.teams);
+      var featured_game = calc.get_featured_game();
+      picks.push(calc.get_game_pick(featured_game.id));
+   }
+   return picks;
+}
+
+
+function get_players_tied_for_first(data) {
+   sorter = require('./sort_week.js');
+   sorter.sort_week_results("wins",data);
+   assign_rank_by_wins_and_losses(data);
+   var tied = new Array();
+   for (var i=0; i < data.length; i++) {
+      if (data.rank == 1) {
+         tied.push(data.player_id);
+      }
+      break;
+   }
+   return tied;
 }
 
 function assign_rank_by_property_wins(property,data) {
@@ -91,10 +132,11 @@ exports.get = function(req, res){
          }
          teams_model.findAll({where: ['id=ANY(?)',team_ids]}).complete(next);
       }]}, function(err,results) {
-         console.log("err:" + err);
+         //console.log("err:" + err);
 
          if (results.week == null) {
             console.log("week missing");
+            res.send("week missing");
             //res.render('week_missing', { year: req.params.year, week:req.params.wknum});
             return
          }
@@ -146,7 +188,6 @@ exports.get = function(req, res){
 
             if (i==0) {
                week_state = calc.get_summary_state_of_all_games();
-               console.log("week_state=" + week_state);
             }
 
             var page_data = new PageData()
@@ -164,9 +205,11 @@ exports.get = function(req, res){
          var sort_by = get_sort_by_param(week_state);
 
          sorter = require('./sort_week.js');
+
+         winner = get_week_winner(data,results);         
          assign_rank(sorter,sort_by,data);
          sorter.sort_week_results(sort_by,data);
 
-         res.render('week_results', { year: req.params.year, week:req.params.wknum, data:data, week_state:week_state, sort_by:sort_by, num_weeks:results.num_weeks });
+         res.render('week_results', { year: req.params.year, week:req.params.wknum, data:data, week_state:week_state, sort_by:sort_by, num_weeks:results.num_weeks, winner:winner });
    });
 }; 

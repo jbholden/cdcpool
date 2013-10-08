@@ -12,6 +12,18 @@ function PageData() {
 
 exports.post = function(req, res){
 
+   // cancel button pressed
+   if (req.body.hasOwnProperty('cancel_form')) {
+      res.redirect(req.params.year+'/week/'+req.params.wknum+'/results');
+      return;
+   }
+
+   // don't know what happened, submit button should have been pressed
+   if (req.body.hasOwnProperty('submit_form') == false) {
+      res.redirect(req.params.year+'/week/'+req.params.wknum+'/results');
+      return;
+   }
+
    var extract_id = function(s) {
       s_array = s.split('_');
       s_id = s_array[s_array.length-1];
@@ -242,6 +254,6 @@ exports.post = function(req, res){
          m.save(['home_score','away_score','state','quarter','time']).complete(next);
          
       }]}, function(err, results) {
-         res.redirect(req.params.year+'/week/'+req.params.wknum+'/results')
+         res.redirect(req.params.year+'/week/'+req.params.wknum+'/results');
       });
 }
