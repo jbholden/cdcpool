@@ -1,0 +1,71 @@
+mixin display_winner_header()
+    if winner_data.featured_game_state != "not_started"
+        td(id="winner-header")
+
+mixin display_winner(entry)
+    if winner_data.featured_game_state != "not_started"
+        if week_state == "final"
+            +display_week_final_winners(entry)
+        else if week_state == "in_progress"
+            +display_projected_winner(entry)
+
+mixin display_projected_winner(entry)
+    if winner_data.featured_game_state == "final"
+        if winner_data.winner.length == 1
+            +display_projected_one_winner(entry,winner_data.winner)
+        else
+            +display_projected_tied_winners(entry,winner_data.winner)
+    else if winner_data.featured_game_state == "in_progress"
+        if winner_data.projected_winner.length == 1
+            +display_projected_one_winner(entry,winner_data.projected_winner)
+        else
+            +display_projected_tied_winners(entry,winner_data.projected_winner)
+
+mixin display_projected_one_winner(entry,winner)
+    if winner[0] == entry.player_id
+        td(id="projected-winner") PROJECTED WINNER
+    else
+        td(id="not-winner")
+
+mixin display_projected_tied_winners(entry,winners)
+    - var is_a_winner = false
+    - for (var i=0; i < winners.length; i++)
+        if winners[i] == entry.player_id
+            - is_a_winner = true
+    if is_a_winner
+        td(id="projected-winner") PROJECTED TIE
+    else
+        td(id="not-winner")
+
+mixin display_week_final_winners(entry)
+    if winner_data.official
+        +display_official_winner(entry)
+    else if winner_data.winner.length == 1
+        +display_unofficial_winner(entry)
+    else 
+        +display_unofficial_tied_winners(entry)
+        
+
+mixin display_official_winner(entry)
+    if winner_data.winner == entry.player_id
+        td(id="official-winner") WINNER
+    else
+        td(id="not-winner")
+
+mixin display_unofficial_winner(entry)
+    if winner_data.winner[0] == entry.player_id
+        td(id="unofficial-winner") UNOFFICIAL WINNER
+    else
+        td(id="not-winner")
+
+mixin display_unofficial_tied_winners(entry)
+    - var is_a_winner = false
+    - for (var i=0; i < winner_data.winner.length; i++)
+        if winner_data.winner[i] == entry.player_id
+            - is_a_winner = true
+    if is_a_winner
+        td(id="unofficial-winner") UNOFFICIAL TIE
+    else
+        td(id="not-winner")
+        
+

@@ -38,9 +38,6 @@
    (done) this.get_pick_score_spread
    (done) this.player_did_not_pick
    (done) this.get_featured_game
-   (done) this.tie_breaker_0
-   (done) this.tie_breaker_1
-   (done) this.get_tie_breaker_winner
 */
 
 function Calculator(games,picks,teams) {
@@ -456,93 +453,6 @@ function Calculator(games,picks,teams) {
       return "" + win_pct.toFixed(3);
    }
 
-   this.get_featured_game = function() {
-      for (var i=0; i < this.games.length; i++) {
-         pick = this.get_game_pick(this.games[i].id);
-         if (pick.away_score != null && pick.home_score != null) {
-            return this.games[i];
-         } 
-      }
-      return null;
-   }
-
-   this.tie_breaker_0 = function(game,tied_players_picks) {
-      if (game.state == "final") {
-         var game_winner = this.get_pool_game_winner(game.id);
-      } else if (game.state == "in_progress") {
-         var game_winner = this.get_team_winning_pool_game(game.id);
-      } else {
-         return null;
-      }
-
-      var won_tiebreak = new Array();
-      for (var i=0; i < tied_players_picks.length; i++) {
-         if (tied_players_picks[i].winner == game_winner) {
-            won_tiebreak.push(tied_players_picks[i]);
-         }
-      }
-      return won_tiebreak;
-   }
-
-   this.tie_breaker_1 = function(game,tied_players_picks) {
-      var result_spread = game.away_score - game.home_score;
-      var min_difference = 0;
-      for (var i=0; i < tied_players_picks.length; i++) {
-         var pick_spread = pick.away_score - pick.home_score
-         var pick_difference = Math.abs(pick_spread - result_spread);
-         if (i==0 || pick_difference < min_difference) {
-            min_difference = pick_difference;
-         }
-      }
-      var won_tiebreak = new Array();
-      for (var i=0; i < tied_players_picks.length; i++) {
-         var pick_spread = pick.away_score - pick.home_score
-         var pick_difference = Math.abs(pick_spread - result_spread);
-         if (pick_difference == min_difference) {
-            won_tiebreak.push(tied_players_picks[i]);
-         }
-      }
-      return won_tiebreak;
-   }
-
-   this.tie_breaker_2 = function(game,tied_players_picks) {
-      var result_total = game.away_score + game.home_score;
-      var min_difference = 0;
-      for (var i=0; i < tied_players_picks.length; i++) {
-         var pick_total = pick.away_score + pick.home_score
-         var pick_difference = Math.abs(result_total-pick_total);
-         if (i==0 || pick_difference < min_difference) {
-            min_difference = pick_difference;
-         }
-      }
-      var won_tiebreak = new Array();
-      for (var i=0; i < tied_players_picks.length; i++) {
-         var pick_spread = pick.away_score - pick.home_score
-         var pick_difference = Math.abs(pick_spread - result_spread);
-         if (pick_difference == min_difference) {
-            won_tiebreak.push(tied_players_picks[i]);
-         }
-      }
-      return won_tiebreak;
-   }
-
-   this.get_tie_breaker_winner = function(tied_players_picks) {
-      var featured_game = this.get_featured_game();
-      if (featured_game.state == "not_started") {
-         return null;
-      }
-      won_tiebreak0 = this.tie_break_0(featured_game,tied_players_picks);
-      if (won_tiebreak0 == null) { return null; }
-      if (won_tiebreak0.length == 1) { return {tiebreak:0, winner:won_tiebreak0[0]}; }
-      won_tiebreak1 = this.tie_break_1(featured_game,won_tiebreak0);
-      if (won_tiebreak1 == null) { return null; }
-      if (won_tiebreak1.length == 1) { return {tiebreak:1, winner:won_tiebreak1[0]}; }
-      won_tiebreak2 = this.tie_break_2(featured_game,won_tiebreak1);
-      if (won_tiebreak2 == null) { return null; }
-      if (won_tiebreak2.length == 1) { return {tiebreak:2, winner:won_tiebreak2[0]}; }
-
-      return {tiebreak:3, winner:won_tiebreak2};   // no way to look at times pick submitted for tiebreak 3
-   }
 }
 
 module.exports = Calculator;

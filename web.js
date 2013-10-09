@@ -15,7 +15,11 @@ var http = require('http');
 var path = require('path');
 
 var app = express();
-app.use(express.logger());
+
+var fs = require('fs');
+var logFile = fs.createWriteStream(__dirname + "/public/logs/cdcpool.log", {flags:'a'});
+
+app.use(express.logger({stream: logFile}));
 
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');

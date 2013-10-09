@@ -1,4 +1,5 @@
 include title_bar
+include winner
 
 mixin display_column(name,value)
    - var reverse_name = name + "_reversed"
@@ -38,20 +39,10 @@ mixin display_week_state_and_games_link()
 mixin display_line(week_state)
    tr
       if week_state == "final"
-         td(id="table-line",colspan="6")
+         td(id="table-line",colspan="5")
+         td
       else
          td(id="table-line",colspan="7")
-
-mixin display_week_winner(entry)
-   if winner == null
-      td(id="week-winner-blank")
-   else if winner.tiebreaker == 0
-      if winner.winner.id == entry.player_id
-         td(id="week-winner") WINNER
-      else
-         td(id="week-winner-blank")
-   else
-      td(id="week-winner-blank") WINNER
 
 
 doctype 5
@@ -76,8 +67,7 @@ html(lang="en")
             if week_state != "final"
                +display_header_with_sort_link('projected','Projected')
                +display_header_with_sort_link('possible','Possible')
-            else
-               td
+            +display_winner_header()
          each entry in data
             tr
                if week_state == "final"
@@ -86,6 +76,7 @@ html(lang="en")
                   +display_column("wins",entry.wins)
                   +display_column("losses",entry.losses)
                   td(id="content") #{entry.win_pct}
+                  +display_winner(entry)
                else
                   td(id="content") #{entry.rank}
                   +display_player_with_link(entry)
@@ -94,6 +85,7 @@ html(lang="en")
                   td(id="content") #{entry.win_pct}
                   +display_column("projected",entry.projected_wins)
                   +display_column("possible",entry.possible_wins)
+                  +display_winner(entry)
             +display_line(week_state)
       
 

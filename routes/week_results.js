@@ -1,5 +1,3 @@
-// TODO:  move winner determination to another file
-
 function PageData() {
    this.rank = null;
    this.player_id = null;
@@ -30,43 +28,11 @@ function assign_rank_by_wins_and_losses(data) {
    }
 }
 
-function get_week_winner(data,results) {
-   player_ids = get_players_tied_for_first(data);
-   if (player_ids.length == 0) { return null; }
-   if (player_ids.length == 1) { return player_ids[0]; }
-
-   player_picks = get_player_picks_in_featured_game(player_ids,results);
-   if (player_picks.length == 0) { return null; }
-
-   var calc = new Calculator(results.games,player_picks,results.teams);
-   var winner = calc.get_tie_breaker_winner(player_picks);
-   return winner;
-}
-
-function get_player_picks_in_featured_game(player_ids,results) {
-   var picks = new Array()
-   for (var i=0; i < player_ids.length; i++) {
-      var player_picks = get_player_picks(player_ids[i],results.picks);
-      var calc = new Calculator(results.games,player_picks,results.teams);
-      var featured_game = calc.get_featured_game();
-      picks.push(calc.get_game_pick(featured_game.id));
-   }
-   return picks;
-}
-
-
-function get_players_tied_for_first(data) {
-   sorter = require('./sort_week.js');
-   sorter.sort_week_results("wins",data);
-   assign_rank_by_wins_and_losses(data);
-   var tied = new Array();
-   for (var i=0; i < data.length; i++) {
-      if (data.rank == 1) {
-         tied.push(data.player_id);
-      }
-      break;
-   }
-   return tied;
+function calculate_winner(data,results) {
+   winner_class = require('./winner.js');
+   var win_input = winner_class.get_winner_input_data_from_week_results(data,results);
+   var winner = new winner_class.Winner(win_input);
+   return winner.get_winner_data_object();
 }
 
 function assign_rank_by_property_wins(property,data) {
@@ -82,7 +48,49 @@ function assign_rank_by_property_wins(property,data) {
    }
 }
 
-function assign_rank(sorter,sort_by,data) {
+function get_winner_index(data,player_id) {
+    for (var i=0; i < data.length; i++) {
+        if (data[i].player_id == player_id) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+function assign_winners_11_wins(winner_data,data) {
+   if (winner_data.winner != null) {
+      var saved_wins = new Object();    
+      if (winner_data.official) {
+         var winner_id = winner_data.winner;
+         var winner_index = get_winner_index(data,winner_id);
+         saved_wins[winner_id] = data[winner_index].wins;
+         data[winner_index].wins = 11;
+      } else {
+        // tiebreaker 3 cannot be determined so report multiple winners
+        for (var i=0; i < winner_data.winner.length; i++) {
+            var winner_id = winner_data.winner[i];
+            var winner_index = get_winner_index(data,winner_id);
+            saved_wins[winner_id] = data[winner_index].wins;
+            data[winner_index].wins = 11;
+        }
+      }
+      return saved_wins;
+   }
+   return null;
+}
+
+function restore_winner_wins(winner_data,data,saved_wins) {
+   if (winner_data.winner == null) {
+       return;
+   }
+   for (var property in saved_wins) {
+       var id = parseInt(property);
+       var winner_index = get_winner_index(data,id);
+       data[winner_index].wins = saved_wins[property];
+   }
+}
+
+function assign_rank(sorter,sort_by,data,winner_data) {
    if (sort_by.indexOf('projected') == 0) {
       sorter.sort_week_results("projected",data);
       assign_rank_by_property_wins("projected_wins",data);
@@ -90,8 +98,10 @@ function assign_rank(sorter,sort_by,data) {
       sorter.sort_week_results("possible",data);
       assign_rank_by_property_wins("possible_wins",data);
    } else {
+      var saved = assign_winners_11_wins(winner_data,data);
       sorter.sort_week_results("wins",data);
       assign_rank_by_wins_and_losses(data);
+      restore_winner_wins(winner_data,data,saved);
    }
 }
 
@@ -203,13 +213,12 @@ exports.get = function(req, res){
          }
 
          var sort_by = get_sort_by_param(week_state);
+         var winner_data = calculate_winner(data,results);
 
          sorter = require('./sort_week.js');
-
-         winner = get_week_winner(data,results);         
-         assign_rank(sorter,sort_by,data);
+         assign_rank(sorter,sort_by,data,winner_data);
          sorter.sort_week_results(sort_by,data);
 
-         res.render('week_results', { year: req.params.year, week:req.params.wknum, data:data, week_state:week_state, sort_by:sort_by, num_weeks:results.num_weeks, winner:winner });
+         res.render('week_results', { year: req.params.year, week:req.params.wknum, data:data, week_state:week_state, sort_by:sort_by, num_weeks:results.num_weeks, winner_data:winner_data });
    });
 }; 
