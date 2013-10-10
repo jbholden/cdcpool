@@ -1,0 +1,14 @@
+#player-name-label {
+   color : blue;
+   background-color: white;
+   text-align: left;
+   padding: 1px 4px;
+   font-family: Helvetica;
+   font-weight: 100;
+}
+#player-name-content {
+   text-align: left;
+   padding: 1px 4px;
+   font-family: Helvetica;
+   font-weight: 100;
+}
