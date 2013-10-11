@@ -12,6 +12,8 @@ var player_results = require('./routes/player_results.js');
 var player_profile = require('./routes/player_profile.js');
 var week_results = require('./routes/week_results.js');
 var overall_results = require('./routes/overall_results.js');
+var player_list = require('./routes/player_list.js');
+var tiebreaker = require('./routes/tiebreaker.js');
 var http = require('http');
 var path = require('path');
 
@@ -117,6 +119,7 @@ var check_for_year_missing = function(req,res,next) {
 app.get('/:year/results', load_model, overall_results.get);
 app.get('/:year/week/:wknum/results', load_model, check_for_week_missing, week_results.get);
 app.get('/:year/week/:wknum/games', load_model, check_for_week_missing, update_games.get);
+app.get('/:year/week/:wknum/tiebreak', load_model, check_for_week_missing, tiebreaker.get);
 app.post('/:year/week/:wknum/games', load_model, check_for_week_missing, update_games_post.post);
 app.get('/:year/week/:wknum/player/:playernum/results', load_model, 
          check_for_week_missing, check_for_player_missing, player_results.get);
@@ -124,6 +127,7 @@ app.get('/:year/player/:playernum/profile', load_model,
          check_for_year_missing, check_for_player_missing, player_profile.get);
 app.post('/:year/player/:playernum/profile', load_model, 
          check_for_year_missing, check_for_player_missing, player_profile.post);
+app.get('/:year/players', load_model,check_for_year_missing, player_list.get);
 
 
 var port = process.env.PORT || 8080;

@@ -106,3 +106,27 @@
    padding: 1px;
    background-color: lightgray;
 }
+
+#player-profile {
+   color: lightgray;
+   background-color: white;
+   font-size: 12pt;
+   padding: 0px 4px;
+   font-family: Helvetica;
+   white-space: nowrap;
+   width: 100%;
+   text-align: right;
+}
+
+#player-profile-link {
+   color: lightgray;
+   background-color: white;
+   font-size: 12pt;
+   padding: 0px 4px;
+   font-family: Helvetica;
+   white-space: nowrap;
+   width: 100%;
+   text-align: right;
+   text-decoration:none;
+}
+

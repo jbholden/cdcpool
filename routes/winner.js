@@ -41,6 +41,55 @@ function get_winner_input_data_from_week_results(page_data,database_results) {
    return input_data;
 }
 
+function get_winner_input_data_from_tiebreaker(database_results) {
+   var get_player_picks = function(player_id,all_picks) {
+      player_picks = new Array()
+      for (var i=0; i < all_picks.length; i++) {
+         if (all_picks[i].player == player_id) {
+            player_picks.push(all_picks[i]);
+         }
+      }
+      return player_picks;
+   }
+
+   var Calculator = require('./calculator.js');
+
+   var input_data = new WinnerInput();
+
+   for (var i=0; i < database_results.games.length; i++) {
+      if (database_results.games[i].number == 10) {
+         input_data.featured_game = database_results.games[i];
+         break;
+      }
+   }
+
+   input_data.player_ids = new Array();
+   input_data.player_wins = new Array();
+   for (var i=0; i < database_results.players.length; i++) {
+      var player_id = database_results.players[i].id;
+
+      var player_picks = get_player_picks(player_id,database_results.picks)
+      var calc = new Calculator(database_results.games,player_picks,null);
+      var wins = calc.get_number_of_wins();
+
+      input_data.player_ids.push(player_id);
+      input_data.player_wins.push(wins);
+   }
+
+   var picks = database_results.picks;
+   input_data.player_featured_game_picks = new Array()
+   for (var i=0; i < input_data.player_ids.length; i++) {
+      var player_id = input_data.player_ids[i];
+      for (var j=0; j < picks.length; j++) {
+         var pick = picks[j]
+         if (pick.player == player_id && pick.game == input_data.featured_game.id) {
+            input_data.player_featured_game_picks.push(pick);
+         }
+      }
+   }
+   return input_data;
+}
+
 
 function Winner(input) {
    this.input = input;
@@ -285,31 +334,31 @@ function Winner(input) {
       return this.calculated_winner == this.input.week.winner;
    }
 
-   this.get_player_tied_for_first = function() {
+   this.get_players_tied_for_first = function() {
     return this.convert_indexes_to_player_ids(this.players_tied_for_first);
    }
-   this.get_player_that_won_tiebreaker_0 = function() {
+   this.get_players_that_won_tiebreak_0 = function() {
     return this.convert_indexes_to_player_ids(this.players_won_tiebreak0);
    }
-   this.get_player_that_lost_tiebreaker_0 = function() {
+   this.get_players_that_lost_tiebreak_0 = function() {
     return this.convert_indexes_to_player_ids(this.players_lost_tiebreak0);
    }
-   this.get_player_that_won_tiebreaker_1 = function() {
+   this.get_players_that_won_tiebreak_1 = function() {
     return this.convert_indexes_to_player_ids(this.players_won_tiebreak1);
    }
-   this.get_player_that_lost_tiebreaker_1 = function() {
+   this.get_players_that_lost_tiebreak_1 = function() {
     return this.convert_indexes_to_player_ids(this.players_lost_tiebreak1);
    }
-   this.get_player_that_won_tiebreaker_2 = function() {
+   this.get_players_that_won_tiebreak_2 = function() {
     return this.convert_indexes_to_player_ids(this.players_won_tiebreak2);
    }
-   this.get_player_that_lost_tiebreaker_2 = function() {
+   this.get_players_that_lost_tiebreak_2 = function() {
     return this.convert_indexes_to_player_ids(this.players_lost_tiebreak2);
    }
-   this.get_player_that_won_tiebreaker_3 = function() {
+   this.get_players_that_won_tiebreak_3 = function() {
     return this.convert_indexes_to_player_ids(this.players_won_tiebreak3);
    }
-   this.get_player_that_lost_tiebreaker_3 = function() {
+   this.get_players_that_lost_tiebreak_3 = function() {
     return this.convert_indexes_to_player_ids(this.players_lost_tiebreak3);
    }
 
@@ -376,5 +425,6 @@ function Winner(input) {
 module.exports = {
    WinnerInput:WinnerInput,
    Winner:Winner,
-   get_winner_input_data_from_week_results: get_winner_input_data_from_week_results
+   get_winner_input_data_from_week_results: get_winner_input_data_from_week_results,
+   get_winner_input_data_from_tiebreaker:get_winner_input_data_from_tiebreaker
 }

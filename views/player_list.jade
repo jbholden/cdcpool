@@ -1,0 +1,25 @@
+include title_bar
+
+doctype 5
+html(lang="en")
+   head
+      title CDC Pool #{year} Player #{player} Profile
+      link(rel="stylesheet" type="text/css" href="/stylesheets/title_bar.css")
+      link(rel="stylesheet" type="text/css" href="/stylesheets/player_list.css")
+   body
+      +display_page_title("Players")
+      br
+      table
+         thead(class="players-header")
+            td(id="header") ID
+            td(id="header") Player
+            td(id="header") 
+         each entry in players
+            tr
+                td(id="player-id") #{entry.id}
+                td(id="player-name") #{entry.name}
+                td(id="player-profile")
+                    a(id="player-profile-link",href="/#{entry.year}/player/#{entry.id}/profile") profile
+            tr
+                td(id="table-line",colspan="3")
+        

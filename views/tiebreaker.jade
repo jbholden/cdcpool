@@ -1,0 +1,64 @@
+include title_bar
+
+mixin display_tiebreak_result(value)
+    if value == "won"
+        td(id="tiebreak-won") #{value}
+    else if value == "lost"
+        td(id="tiebreak-lost") #{value}
+    else
+        td(id="tiebreak-blank")
+
+mixin tiebreak_title(number,description)
+   table(class="tiebreaker-title")
+      tr
+         td(id="tiebreaker-number") Tiebreaker #{number} Details
+         td(id="tiebreaker-description") (#{description})
+
+mixin display_tiebreak0()
+   br
+   br
+   +tiebreak_title("0","Pick the winner of game 10.")
+   table
+      thead(class="tiebreaker-header")
+         td(id="header") Player
+         td(id="header") Result
+         td(id="header") Player Pick
+         td(id="header") Game Winner
+      each entry in tiebreak0
+         tr
+            td(id="player-content") #{entry.player_name}
+            +display_tiebreak_result(entry.result)
+            td(id="content") #{entry.player_pick}
+            td(id="content") #{entry.featured_game_winner}
+            tr
+                td(id="table-line",colspan="5")
+         
+
+doctype 5
+html(lang="en")
+   head
+      title CDC Pool #{year} Week #{week} Tiebreaker
+      link(rel="stylesheet" type="text/css" href="/stylesheets/title_bar.css")
+      link(rel="stylesheet" type="text/css" href="/stylesheets/tiebreaker.css")
+   body
+      - var page_title = "Week " + week + " Tiebreaker"
+      +display_page_title(page_title)
+      br
+      table
+         thead(class="tiebreaker-header")
+            td(id="header") Player
+            td(id="header") Tiebreak 0
+            td(id="header") Tiebreak 1
+            td(id="header") Tiebreak 2
+            td(id="header") Tiebreak 3
+         each entry in data
+            tr
+                td(id="player-content") #{entry.player_name}
+                +display_tiebreak_result(entry.tiebreak0)
+                +display_tiebreak_result(entry.tiebreak1)
+                +display_tiebreak_result(entry.tiebreak2)
+                +display_tiebreak_result(entry.tiebreak3)
+            tr
+                td(id="table-line",colspan="5")
+      if tiebreak0.length > 0
+         +display_tiebreak0()

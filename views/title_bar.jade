@@ -15,6 +15,8 @@ mixin display_overall_link_bar(year,num_weeks)
          - for (var week_number=1; week_number <= num_weeks; week_number++)
             td(id="link-bar-week-number")
                a(id="link-bar-week-number-link",href="/#{year}/week/#{week_number}/results") #{week_number}
+         td(id="player-profile") 
+                  a(id="player-profile-link",href="/#{year}/players") Players
 
 mixin display_week_link_bar(year,page_week_number,num_weeks)
    table
@@ -29,6 +31,8 @@ mixin display_week_link_bar(year,page_week_number,num_weeks)
                   a(id="link-bar-week-number-highlight",href="/#{year}/week/#{week_number}/results") #{week_number}
                else
                   a(id="link-bar-week-number-link",href="/#{year}/week/#{week_number}/results") #{week_number}
+         td(id="player-profile") 
+                  a(id="player-profile-link",href="/#{year}/players") Players
 
 mixin display_player_week_link_bar(year,page_week_number,num_weeks,player_id)
    table
@@ -43,3 +47,5 @@ mixin display_player_week_link_bar(year,page_week_number,num_weeks,player_id)
                   a(id="link-bar-week-number-highlight",href="/#{year}/week/#{week_number}/player/#{player_id}/results") #{week_number}
                else
                   a(id="link-bar-week-number-link",href="/#{year}/week/#{week_number}/player/#{player_id}/results") #{week_number}
+         td(id="player-profile") 
+                  a(id="player-profile-link",href="/#{year}/player/#{player_id}/profile") Profile
