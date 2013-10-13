@@ -9,10 +9,10 @@ function PageData() {
    this.possible_wins = null;
 }
 
-function assign_rank_by_wins_and_losses(data) {
+function assign_rank_by_wins_and_losses(data,first_rank) {
    var wins = data[0].wins;
    var losses = data[0].losses;
-   var rank = 1;
+   var rank = first_rank;
    for (var i=0; i < data.length; i++) {
       wins_changed = data[i].wins != wins;
       losses_changed = data[i].losses != losses;
@@ -28,16 +28,30 @@ function assign_rank_by_wins_and_losses(data) {
    }
 }
 
-function calculate_winner(data,results) {
+function assign_leaders_rank_1(data,leaders) {
+   if (leaders == null) { return; }
+   if (leaders.hasOwnProperty('length') == false) {
+      var index = get_winner_index(data,leaders);
+      data[index].rank = 1;
+   } else {
+      for (var i=0; i < leaders.length; i++) {
+         var index = get_winner_index(data,leaders);
+         data[index].rank = 1;
+      }
+   }
+}
+
+function calculate_winner(data,results,week_state) {
+   var use_projected = week_state == "in_progress"? true : false;
    winner_class = require('./winner.js');
    var win_input = winner_class.get_winner_input_data_from_week_results(data,results);
-   var winner = new winner_class.Winner(win_input);
+   var winner = new winner_class.Winner(win_input,use_projected);
    return winner.get_winner_data_object();
 }
 
-function assign_rank_by_property_wins(property,data) {
+function assign_rank_by_property_wins(property,data,first_rank) {
    var wins = data[0][property];
-   var rank = 1;
+   var rank = first_rank;
    for (var i=0; i < data.length; i++) {
       wins_changed = data[i][property] != wins;
       if (wins_changed) {
@@ -57,51 +71,58 @@ function get_winner_index(data,player_id) {
     return -1;
 }
 
-function assign_winners_11_wins(winner_data,data) {
-   if (winner_data.winner != null) {
-      var saved_wins = new Object();    
-      if (winner_data.official) {
-         var winner_id = winner_data.winner;
-         var winner_index = get_winner_index(data,winner_id);
-         saved_wins[winner_id] = data[winner_index].wins;
-         data[winner_index].wins = 11;
-      } else {
-        // tiebreaker 3 cannot be determined so report multiple winners
-        for (var i=0; i < winner_data.winner.length; i++) {
-            var winner_id = winner_data.winner[i];
-            var winner_index = get_winner_index(data,winner_id);
-            saved_wins[winner_id] = data[winner_index].wins;
-            data[winner_index].wins = 11;
-        }
-      }
-      return saved_wins;
+
+function assign_all_players_rank_1(data) {
+   for (var i=0; i < data.length; i++) {
+      data[i].rank = 1;
+   }
+}
+
+function assign_rank(sorter,sort_by,data,winner_data,week_state) {
+   if (week_state == "final") {
+      sorter.sort_week_results_with_leaders("wins",data,winner_data.winner);
+      assign_rank_by_wins_and_losses(data,2);
+      assign_leaders_rank_1(data,winner_data.winner)
+   } else if (week_state == "not_started") {
+      assign_all_players_rank_1(data);
+   } else if (week_state != "in_progress") {
+      assign_all_players_rank_1(data);  // error
+   }
+   assign_week_in_progress_rank(sorter,sort_by,data,winner_data);
+}
+
+function get_projected_winner(winner_data) {
+   if (winner_data.featured_game_state == "final") {
+      return winner_data.winner;
+   } else if (winner_data.featured_game_state == "in_progress") {
+      return winner_data.projected;
    }
    return null;
 }
 
-function restore_winner_wins(winner_data,data,saved_wins) {
-   if (winner_data.winner == null) {
-       return;
-   }
-   for (var property in saved_wins) {
-       var id = parseInt(property);
-       var winner_index = get_winner_index(data,id);
-       data[winner_index].wins = saved_wins[property];
-   }
-}
+function assign_week_in_progress_rank(sorter,sort_by,data,winner_data) {
+   //TODO: fix this
+   //var projected_winner = get_projected_winner(winner_data);
+   var projected_winner = null;
 
-function assign_rank(sorter,sort_by,data,winner_data) {
-   if (sort_by.indexOf('projected') == 0) {
-      sorter.sort_week_results("projected",data);
-      assign_rank_by_property_wins("projected_wins",data);
+   if (sort_by.indexOf('wins') == 0) {
+      sorter.sort_week_results_with_leaders("wins",data,projected_winner);
+      assign_rank_by_wins_and_losses(data,1);
+   } else if (sort_by.indexOf('losses') == 0) {
+      sorter.sort_week_results_with_leaders("wins",data,projected_winner);
+      assign_rank_by_wins_and_losses(data,1);
+   } else if (sort_by.indexOf('projected') == 0) {
+      //TODO: fix this
+      sorter.sort_week_results_with_leaders("projected",data,projected_winner);
+      if (projected_winner == null) {
+         assign_rank_by_property_wins("projected_wins",data,1);
+      } else {
+         assign_rank_by_property_wins("projected_wins",data,2);
+         assign_leaders_rank_1(data,projected_winner);
+      }
    } else if (sort_by.indexOf('possible') == 0) {
-      sorter.sort_week_results("possible",data);
-      assign_rank_by_property_wins("possible_wins",data);
-   } else {
-      var saved = assign_winners_11_wins(winner_data,data);
-      sorter.sort_week_results("wins",data);
-      assign_rank_by_wins_and_losses(data);
-      restore_winner_wins(winner_data,data,saved);
+      sorter.sort_week_results_with_leaders("possible",data,projected_winner);
+      assign_rank_by_property_wins("possible_wins",data,1);
    }
 }
 
@@ -213,11 +234,16 @@ exports.get = function(req, res){
          }
 
          var sort_by = get_sort_by_param(week_state);
-         var winner_data = calculate_winner(data,results);
+         var winner_data = calculate_winner(data,results,week_state);
 
          sorter = require('./sort_week.js');
-         assign_rank(sorter,sort_by,data,winner_data);
-         sorter.sort_week_results(sort_by,data);
+         assign_rank(sorter,sort_by,data,winner_data,week_state);
+         // TODO:  fix this
+         if (week_state == "final") {
+            sorter.sort_week_results_with_leaders(sort_by,data,get_projected_winner(winner_data));
+         } else {
+            sorter.sort_week_results_with_leaders(sort_by,data,null);
+         }
 
          res.render('week_results', { year: req.params.year, week:req.params.wknum, data:data, week_state:week_state, sort_by:sort_by, num_weeks:results.num_weeks, winner_data:winner_data });
    });

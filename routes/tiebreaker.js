@@ -120,9 +120,14 @@ exports.get = function(req, res){
             }
             return null;
          }
+         var Calculator = require('./calculator.js');
+         var calc = new Calculator(results.games,null,null);
+         var week_state = calc.get_summary_state_of_all_games();
+         var use_projected = week_state == "in_progress"? true : false;
+
          var winner_class = require('./winner.js');
          var input = winner_class.get_winner_input_data_from_tiebreaker(results)
-         var winner = new winner_class.Winner(input);
+         var winner = new winner_class.Winner(input,use_projected);
 
          var data = new Array();
          var tied_for_first = winner.get_players_tied_for_first();

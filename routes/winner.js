@@ -1,6 +1,8 @@
+// TODO:  change projected_wins
 function WinnerInput() {
    this.player_ids = null;
    this.player_wins = null;
+   this.player_projected_wins = null;
    this.featured_game = null;
    this.player_featured_game_picks = null;
    this.week = null;
@@ -22,9 +24,11 @@ function get_winner_input_data_from_week_results(page_data,database_results) {
 
    input_data.player_ids = new Array();
    input_data.player_wins = new Array();
+   input_data.player_projected_wins = new Array();
    for (var i=0; i < page_data.length; i++) {
       input_data.player_ids.push(page_data[i].player_id);
       input_data.player_wins.push(page_data[i].wins);
+      input_data.player_projected_wins.push(page_data[i].projected_wins);
    }
 
    var picks = database_results.picks;
@@ -65,15 +69,18 @@ function get_winner_input_data_from_tiebreaker(database_results) {
 
    input_data.player_ids = new Array();
    input_data.player_wins = new Array();
+   input_data.player_projected_wins = new Array();
    for (var i=0; i < database_results.players.length; i++) {
       var player_id = database_results.players[i].id;
 
       var player_picks = get_player_picks(player_id,database_results.picks)
       var calc = new Calculator(database_results.games,player_picks,null);
       var wins = calc.get_number_of_wins();
+      var projected_wins = calc.get_number_of_projected_wins();
 
       input_data.player_ids.push(player_id);
       input_data.player_wins.push(wins);
+      input_data.player_projected_wins.push(projected_wins);
    }
 
    var picks = database_results.picks;
@@ -91,8 +98,9 @@ function get_winner_input_data_from_tiebreaker(database_results) {
 }
 
 
-function Winner(input) {
+function Winner(input,use_projected_winner) {
    this.input = input;
+   this.use_projected_winner = use_projected_winner;
    this.calculated_winner = null;
    this.players_tied_for_first = null;
    this.players_won_tiebreak0 = null;
@@ -105,10 +113,16 @@ function Winner(input) {
    this.players_lost_tiebreak3 = null;
 
    this.calculate_tied_for_first = function() {
-      var most_wins = Math.max.apply(Math,this.input.player_wins);
+      var wins_data = null; 
+      if (this.use_projected_winner) {
+         wins_data = this.input.player_projected_wins;
+      } else {
+         wins_data = this.input.player_wins;
+      }
+      var most_wins = Math.max.apply(Math,wins_data);
       var tied_for_first = new Array();
-      for (var i=0; i < this.input.player_wins.length; i++) {
-         if (this.input.player_wins[i] == most_wins) {
+      for (var i=0; i < wins_data.length; i++) {
+         if (wins_data[i] == most_wins) {
             tied_for_first.push(i);
          }
       }
@@ -201,12 +215,12 @@ function Winner(input) {
       for (var i=0; i < players.length; i++) {
          var index = players[i];
          var pick = this.input.player_featured_game_picks[index];
-         var pick_spread = pick.away_score - pick.home_score
-         var pick_difference = Math.abs(pick_spread - result_spread);
+         var pick_total = pick.away_score + pick.home_score
+         var pick_difference = Math.abs(result_total-pick_total);
          if (pick_difference == min_difference) {
-            won_tiebreak2.push(tied_players_picks[i]);
+            won_tiebreak2.push(index);
          } else {
-            lost_tiebreak2.push(tied_players_picks[i]);
+            lost_tiebreak2.push(index);
          }
       }
       this.players_won_tiebreak2 = won_tiebreak2;
@@ -410,7 +424,8 @@ function Winner(input) {
       var projected_winner = this.get_projected_winner();
       var featured_game_state = this.input.featured_game.state;
       var official = this.is_winner_official();
-      return { featured_game_state:featured_game_state, winner:winner, projected:projected_winner, official:official };
+      var num_tied_for_first = this.players_tied_for_first.length;
+      return { featured_game_state:featured_game_state, winner:winner, projected:projected_winner, official:official, num_tied_for_first:num_tied_for_first };
       // return { featured_game_state:featured_game_state, winner:new Array(75,56), projected:projected_winner, official:official };
    }
 

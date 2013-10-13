@@ -16,14 +16,18 @@ mixin display_projected_winner(entry)
         else
             +display_projected_tied_winners(entry,winner_data.winner)
     else if winner_data.featured_game_state == "in_progress"
-        if winner_data.projected_winner.length == 1
-            +display_projected_one_winner(entry,winner_data.projected_winner)
+        if winner_data.projected.length == 1
+            +display_projected_one_winner(entry,winner_data.projected)
         else
-            +display_projected_tied_winners(entry,winner_data.projected_winner)
+            +display_projected_tied_winners(entry,winner_data.projected)
 
 mixin display_projected_one_winner(entry,winner)
     if winner[0] == entry.player_id
-        td(id="projected-winner") PROJECTED WINNER
+        if winner_data.num_tied_for_first == 1
+            td(id="projected-winner") PROJECTED WINNER
+        else
+            td(id="projected-winner") 
+                a(id="projected-winner-link",href="tiebreak") PROJECTED WINNER
     else
         td(id="not-winner")
 
@@ -33,7 +37,11 @@ mixin display_projected_tied_winners(entry,winners)
         if winners[i] == entry.player_id
             - is_a_winner = true
     if is_a_winner
-        td(id="projected-winner") PROJECTED TIE
+        if winner_data.num_tied_for_first == 1
+            td(id="projected-winner") PROJECTED TIE
+        else
+            td(id="projected-winner")
+                a(id="projected-winner-link",href="tiebreak") PROJECTED TIE
     else
         td(id="not-winner")
 
@@ -48,13 +56,21 @@ mixin display_week_final_winners(entry)
 
 mixin display_official_winner(entry)
     if winner_data.winner == entry.player_id
-        td(id="official-winner") WINNER
+        if winner_data.num_tied_for_first == 1
+            td(id="official-winner") WINNER
+        else
+            td(id="official-winner")
+                a(id="official-winner-link",href="tiebreak") WINNER
     else
         td(id="not-winner")
 
 mixin display_unofficial_winner(entry)
     if winner_data.winner[0] == entry.player_id
-        td(id="unofficial-winner") UNOFFICIAL WINNER
+        if winner_data.num_tied_for_first == 1
+            td(id="unofficial-winner") UNOFFICIAL WINNER
+        else
+            td(id="unofficial-winner") UNOFFICIAL WINNER
+                a(id="unofficial-winner-link",href="tiebreak") UNOFFICIAL WINNER
     else
         td(id="not-winner")
 
@@ -64,7 +80,11 @@ mixin display_unofficial_tied_winners(entry)
         if winner_data.winner[i] == entry.player_id
             - is_a_winner = true
     if is_a_winner
-        td(id="unofficial-winner") UNOFFICIAL TIE
+        if winner_data.num_tied_for_first == 1
+            td(id="unofficial-winner") UNOFFICIAL TIE
+        else
+            td(id="unofficial-winner")
+                a(id="unofficial-winner-link",href="tiebreak") UNOFFICIAL TIE
     else
         td(id="not-winner")
         
