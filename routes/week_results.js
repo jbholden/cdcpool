@@ -83,10 +83,13 @@ function assign_rank(sorter,sort_by,data,winner_data,week_state) {
       sorter.sort_week_results_with_leaders("wins",data,winner_data.winner);
       assign_rank_by_wins_and_losses(data,2);
       assign_leaders_rank_1(data,winner_data.winner)
+      return;
    } else if (week_state == "not_started") {
       assign_all_players_rank_1(data);
+      return;
    } else if (week_state != "in_progress") {
       assign_all_players_rank_1(data);  // error
+      return;
    }
    assign_week_in_progress_rank(sorter,sort_by,data,winner_data);
 }

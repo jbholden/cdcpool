@@ -16,6 +16,24 @@ function PageTiebreaker0Data() {
    this.featured_game_winner = null;
 }
 
+function PageTiebreaker1SummaryData() {
+   this.away_team = null;
+   this.home_team = null;
+   this.away_score = null;
+   this.home_score = null;
+   this.result_spread = null;
+}
+
+function PageTiebreaker1Data() {
+   this.player_id = null;
+   this.player_name = null;
+   this.result = null;
+   this.difference = null;
+   this.away_score = null;
+   this.home_score = null;
+   this.pick_spread = null;
+}
+
 
 function lookup_player_name(players,player_id) {
    for (var i=0; i < players.length; i++) {
@@ -36,36 +54,104 @@ function get_player_picks(player_id,all_picks) {
    return player_picks;
 }
 
+function get_featured_game_pick(player_id,all_picks,featured_game_id) {
+   for (var i=0; i < all_picks.length; i++) {
+      if (all_picks[i].player == player_id && all_picks[i].game == featured_game_id) {
+         return all_picks[i];
+      }
+   }
+   return null;
+}
+
 function calculate_tiebreaker0_details(results,won_tiebreak0,lost_tiebreak0,featured_game_id) {
    var Calculator = require('./calculator.js');
+   var calc = new Calculator(results.games,null,results.featured_teams);
+   var featured_game = calc.get_game(featured_game_id);
+
    var tiebreak0_data = new Array();
    for (var i=0; i < won_tiebreak0.length; i++) {
       var p = new PageTiebreaker0Data();
       p.player_id = won_tiebreak0[i];
       p.player_name = lookup_player_name(results.players,p.player_id);
-      p.result = "won";
+      p.result = featured_game.state == "in_progress" ? "ahead" : "won";
 
       var player_picks = get_player_picks(p.player_id,results.picks);
       var calc = new Calculator(results.games,player_picks,results.featured_teams);
 
       p.player_pick = calc.get_team_name_picked_to_win(featured_game_id);
-      p.featured_game_winner = calc.get_pool_game_winner_team_name(featured_game_id);
+      if (featured_game.state == "in_progress") {
+         p.featured_game_winner = calc.get_team_name_winning_pool_game(featured_game_id);
+      } else {
+         p.featured_game_winner = calc.get_pool_game_winner_team_name(featured_game_id);
+      }
       tiebreak0_data.push(p);
    }
    for (var i=0; i < lost_tiebreak0.length; i++) {
       var p = new PageTiebreaker0Data();
       p.player_id = lost_tiebreak0[i];
       p.player_name = lookup_player_name(results.players,p.player_id);
-      p.result = "lost";
+      p.result = featured_game.state == "in_progress" ? "behind" : "lost";
 
       var player_picks = get_player_picks(p.player_id,results.picks);
       var calc = new Calculator(results.games,player_picks,results.featured_teams);
 
       p.player_pick = calc.get_team_name_picked_to_win(featured_game_id);
-      p.featured_game_winner = calc.get_pool_game_winner_team_name(featured_game_id);
+      if (featured_game.state == "in_progress") {
+         p.featured_game_winner = calc.get_team_name_winning_pool_game(featured_game_id);
+      } else {
+         p.featured_game_winner = calc.get_pool_game_winner_team_name(featured_game_id);
+      }
       tiebreak0_data.push(p);
    }
    return tiebreak0_data;
+}
+
+function calculate_tiebreaker1_details(results,won_tiebreak1,lost_tiebreak1,featured_game_id) {
+   var Calculator = require('./calculator.js');
+   var calc = new Calculator(results.games,null,results.featured_teams);
+
+   var featured_game = calc.get_game(featured_game_id);
+
+   var summary = new PageTiebreaker1SummaryData();
+   summary.away_team = calc.get_team_name(featured_game.away_team);
+   summary.home_team = calc.get_team_name(featured_game.home_team);
+   summary.away_score = featured_game.away_score;
+   summary.home_score = featured_game.home_score;
+   summary.result_spread = featured_game.away_score - featured_game.home_score;
+
+   var tiebreak1_data = new Array();
+
+   for (var i=0; i < won_tiebreak1.length; i++) {
+      var p = new PageTiebreaker1Data();
+      p.player_id = won_tiebreak1[i];
+      p.player_name = lookup_player_name(results.players,p.player_id);
+      p.result = featured_game.state == "in_progress" ? "ahead" : "won";
+
+      var player_pick = get_featured_game_pick(p.player_id,results.picks,featured_game_id);
+
+      p.away_score = player_pick.away_score;
+      p.home_score = player_pick.home_score;
+      p.pick_spread = p.away_score - p.home_score;
+      p.difference = Math.abs(p.pick_spread - summary.result_spread);
+
+      tiebreak1_data.push(p);
+   }
+   for (var i=0; i < lost_tiebreak1.length; i++) {
+      var p = new PageTiebreaker1Data();
+      p.player_id = lost_tiebreak1[i];
+      p.player_name = lookup_player_name(results.players,p.player_id);
+      p.result = featured_game.state == "in_progress" ? "behind" : "lost";
+
+      var player_pick = get_featured_game_pick(p.player_id,results.picks,featured_game_id);
+
+      p.away_score = player_pick.away_score;
+      p.home_score = player_pick.home_score;
+      p.pick_spread = p.away_score - p.home_score;
+      p.difference = Math.abs(p.pick_spread - summary.result_spread);
+
+      tiebreak1_data.push(p);
+   }
+   return { summary:summary, data:tiebreak1_data };
 }
 
 exports.get = function(req, res){
@@ -191,7 +277,9 @@ exports.get = function(req, res){
 
          var featured_game_id = input.featured_game.id;
          var tiebreak0_data = calculate_tiebreaker0_details(results,won_tiebreak0,lost_tiebreak0,featured_game_id);
+         var tiebreak1_data = calculate_tiebreaker1_details(results,won_tiebreak1,lost_tiebreak1,featured_game_id);
 
-         res.render('tiebreaker', { year: year_number, week:week_number, data:data, tiebreak0:tiebreak0_data });
+         res.render('tiebreaker', { year: year_number, week:week_number, data:data, 
+                                    tiebreak0:tiebreak0_data, tiebreak1:tiebreak1_data});
    });
 }
