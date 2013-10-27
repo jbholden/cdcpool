@@ -5,8 +5,20 @@ mixin display_tiebreak_result(value)
         td(id="tiebreak-won") #{value}
     else if value == "lost"
         td(id="tiebreak-lost") #{value}
+    else if value == "ahead"
+        td(id="tiebreak-ahead") #{value}
+    else if value == "behind"
+        td(id="tiebreak-behind") #{value}
     else
         td(id="tiebreak-blank")
+
+mixin summary_title()
+   table(class="tiebreaker-title")
+      tr
+         td(id="tiebreaker-number") Summary
+         td(id="tiebreaker-description")
+      tr
+         td(id="table-line-gray",colspan="2")
 
 mixin tiebreak_title(number,description)
    table(class="tiebreaker-title")
@@ -14,7 +26,7 @@ mixin tiebreak_title(number,description)
          td(id="tiebreaker-number") Tiebreaker #{number} Details
          td(id="tiebreaker-description") (#{description})
       tr
-         td(id="table-line-blue",colspan="2")
+         td(id="table-line-gray",colspan="2")
 
 mixin display_tiebreak0()
    br
@@ -25,7 +37,10 @@ mixin display_tiebreak0()
          td(id="header") Player
          td(id="header") Result
          td(id="header") Player Pick
-         td(id="header") Game Winner
+         if use_projected
+            td(id="header") Team Ahead
+         else
+            td(id="header") Game Winner
       each entry in tiebreak0
          tr
             td(id="player-content") #{entry.player_name}
@@ -54,56 +69,11 @@ mixin display_game(type,value)
       tr
          td(id="table-line",colspan="2")
 
-mixin display_tiebreak1_v2()
-   - var num_columns = 2 + tiebreak1.data.length
-   table
-      thead(class="game-header")
-         td(id="teams-header") Game 10
-         td(id="score-header") Final
-         each entry in tiebreak1.data
-            td(id="score-header") #{entry.player_name}
-      tr(class="game-content")
-         td(id="team-name") #{tiebreak1.summary.away_team}
-         td(id="team-score") #{tiebreak1.summary.away_score}
-         each entry in tiebreak1.data
-            //- td(id="team-score") #{entry.away_score}
-            td(id="game-value") #{entry.away_score}
-      tr(class="game-content")
-         td(id="team-name") #{tiebreak1.summary.home_team}
-         td(id="team-score") #{tiebreak1.summary.home_score}
-         each entry in tiebreak1.data
-            //- td(id="team-score") #{entry.home_score}
-            td(id="game-value") #{entry.home_score}
-      tr
-         td(id="table-line",colspan="#{num_columns}")
-      tr(class="game-content")
-         td(id="game-type-label") Spread
-         td(id="game-value") #{tiebreak1.summary.result_spread}
-         each entry in tiebreak1.data
-            td(id="game-value") #{entry.pick_spread}
-      tr
-         td(id="table-line",colspan="#{num_columns}")
-      tr(class="game-content")
-         td(id="game-type-label") Difference
-         td(id="game-value")
-         each entry in tiebreak1.data
-            td(id="game-value") #{entry.difference}
-      tr
-         td(id="table-line",colspan="#{num_columns}")
-      tr(class="game-content")
-         td(id="game-type-label") Result
-         td(id="game-value")
-         each entry in tiebreak1.data
-            +display_tiebreak_result(entry.result)
-      tr
-         td(id="table-line",colspan="#{num_columns}")
-
 mixin display_tiebreak1()
    br
    br
    +tiebreak_title("1","Pick the score spread closest to the game 10 score spread.")
    +display_game("Spread",tiebreak1.summary.result_spread)
-   //- +display_tiebreak1_v2()
    br
    table
       thead(class="tiebreaker-header")
@@ -126,6 +96,42 @@ mixin display_tiebreak1()
          tr
             td(id="table-line",colspan="7")
    br
+
+mixin display_tiebreak2()
+   br
+   br
+   +tiebreak_title("2","Pick the score total closest to the game 10 score total.")
+   +display_game("Total",tiebreak2.summary.result_total)
+   br
+   table
+      thead(class="tiebreaker-header")
+         td(id="header") Player
+         td(id="header") Result
+         td(id="header") #{tiebreak2.summary.away_team}
+         td(id="header") #{tiebreak2.summary.home_team}
+         td(id="header") Pick Total
+         td(id="header") Result Total
+         td(id="header") Difference
+      each entry in tiebreak2.data
+         tr
+            td(id="player-content") #{entry.player_name}
+            +display_tiebreak_result(entry.result)
+            td(id="content") #{entry.away_score}
+            td(id="content") #{entry.home_score}
+            td(id="content") #{entry.pick_total}
+            td(id="content") #{tiebreak2.summary.result_total}
+            td(id="content-highlight") #{entry.difference}
+         tr
+            td(id="table-line",colspan="7")
+   br
+
+mixin display_tiebreak3()
+   br
+   br
+   +tiebreak_title("3","Person who enters their picks the earliest.")
+   div#tiebreaker3-text This is chosen manually.
+   br
+   br
          
 
 doctype 5
@@ -137,9 +143,9 @@ html(lang="en")
    body
       - var page_title = "Week " + week + " Tiebreaker"
       +display_page_title(page_title)
+      +display_week_link_bar(year,week,num_weeks)
       br
-      div(class="under-construction") Page is under construction.
-      br
+      +summary_title()
       table
          thead(class="tiebreaker-header")
             td(id="header") Player
@@ -160,3 +166,7 @@ html(lang="en")
          +display_tiebreak0()
       if tiebreak1.data.length > 0
          +display_tiebreak1()
+      if tiebreak2.data.length > 0
+         +display_tiebreak2()
+      if tiebreak3 != null
+         +display_tiebreak3()

@@ -1,4 +1,4 @@
-// TODO:  change projected_wins
+// TODO:  change tiebreaker3 to use winner if entered
 function WinnerInput() {
    this.player_ids = null;
    this.player_wins = null;

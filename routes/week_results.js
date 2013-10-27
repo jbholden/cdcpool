@@ -244,6 +244,8 @@ exports.get = function(req, res){
          // TODO:  fix this
          if (week_state == "final") {
             sorter.sort_week_results_with_leaders(sort_by,data,get_projected_winner(winner_data));
+         } else if (week_state == "in_progress" && sort_by.indexOf("projected") == 0) {
+            sorter.sort_week_results_with_leaders(sort_by,data,get_projected_winner(winner_data));
          } else {
             sorter.sort_week_results_with_leaders(sort_by,data,null);
          }

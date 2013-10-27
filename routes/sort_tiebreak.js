@@ -31,6 +31,17 @@ function sort_by_tiebreak(a,b) {
 
 }
 
+function sort_by_difference(a,b) {
+   if (a.difference==b.difference) { return 0; }
+   return a.difference < b.difference? -1 : 1;
+}
+
 exports.sort_tiebreak = function(data) {
    data.sort(sort_by_tiebreak);
+}
+exports.sort_tiebreak1 = function(data) {
+   data.sort(sort_by_difference);
+}
+exports.sort_tiebreak2 = function(data) {
+   data.sort(sort_by_difference);
 }
