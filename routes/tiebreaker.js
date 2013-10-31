@@ -351,7 +351,7 @@ exports.get = function(req, res){
          sorter.sort_tiebreak1(tiebreak1_data.data);
          sorter.sort_tiebreak2(tiebreak2_data.data);
 
-         res.render('tiebreaker', { year: year_number, week:week_number, num_weeks:results.num_weeks, data:data, use_projected:use_projected, 
+         res.render('tiebreaker', { year: year_number, week:week_number, num_weeks:results.num_weeks, data:data, featured_in_progress:featured_game_in_progress, 
                                     tiebreak0:tiebreak0_data, tiebreak1:tiebreak1_data, tiebreak2:tiebreak2_data, tiebreak3:null});
    });
 }
