@@ -126,6 +126,9 @@ function assign_week_in_progress_rank(sorter,sort_by,data,winner_data) {
    } else if (sort_by.indexOf('possible') == 0) {
       sorter.sort_week_results_with_leaders("possible",data,projected_winner);
       assign_rank_by_property_wins("possible_wins",data,1);
+   } else if (sort_by.indexOf('player') == 0) {
+      sorter.sort_week_results_with_leaders("wins",data,projected_winner);
+      assign_rank_by_wins_and_losses(data,1);
    }
 }
 
